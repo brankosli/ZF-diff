@@ -14,9 +14,9 @@
  *
  * @category   Zend
  * @package    Zend_Ldap
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Collection.php 20096 2010-01-06 02:05:09Z bkarwin $
+ * @version    $Id$
  */
 
 /**
@@ -24,7 +24,7 @@
  *
  * @category   Zend
  * @package    Zend_Ldap
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Ldap_Collection implements Iterator, Countable
@@ -48,7 +48,7 @@ class Zend_Ldap_Collection implements Iterator, Countable
      *
      * @var array
      */
-    protected $_cache = array();
+    protected $_cache = [];
 
     /**
      * Constructor.
@@ -82,7 +82,7 @@ class Zend_Ldap_Collection implements Iterator, Countable
      */
     public function toArray()
     {
-        $data = array();
+        $data = [];
         foreach ($this as $item) {
             $data[] = $item;
         }
@@ -92,7 +92,7 @@ class Zend_Ldap_Collection implements Iterator, Countable
     /**
      * Get first entry
      *
-     * @return array
+     * @return array|null
      */
     public function getFirst()
     {

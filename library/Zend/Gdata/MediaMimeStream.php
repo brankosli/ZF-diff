@@ -16,9 +16,9 @@
  * @category   Zend
  * @package    Zend_Gdata
  * @subpackage Gdata
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: MediaMimeStream.php 20096 2010-01-06 02:05:09Z bkarwin $
+ * @version    $Id$
  */
 
 /**
@@ -38,7 +38,7 @@ require_once 'Zend/Gdata/MimeBodyString.php';
  * @category   Zend
  * @package    Zend_Gdata
  * @subpackage Gdata
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Gdata_MediaMimeStream
@@ -102,7 +102,7 @@ class Zend_Gdata_MediaMimeStream
         $entry = $this->wrapEntry($xmlString, $fileContentType);
         $closingBoundary = new Zend_Gdata_MimeBodyString("\r\n--{$this->_boundaryString}--\r\n");
         $file = new Zend_Gdata_MimeFile($this->_fileHandle);
-        $this->_parts = array($entry, $file, $closingBoundary);
+        $this->_parts = [$entry, $file, $closingBoundary];
 
         $fileSize = filesize($filePath);
         $this->_totalSize = $entry->getSize() + $fileSize

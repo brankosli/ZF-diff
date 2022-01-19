@@ -16,9 +16,9 @@
  * @category   Zend
  * @package    Zend_Gdata
  * @subpackage Books
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: VolumeEntry.php 20096 2010-01-06 02:05:09Z bkarwin $
+ * @version    $Id$
  */
 
 /**
@@ -102,7 +102,7 @@ require_once 'Zend/Gdata/Books/Extension/Viewability.php';
  * @category   Zend
  * @package    Zend_Gdata
  * @subpackage Books
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Gdata_Books_VolumeEntry extends Zend_Gdata_Entry
@@ -114,18 +114,18 @@ class Zend_Gdata_Books_VolumeEntry extends Zend_Gdata_Entry
     const ANNOTATION_LINK_REL = 'http://schemas.google.com/books/2008/annotation';
 
     protected $_comments = null;
-    protected $_creators = array();
-    protected $_dates = array();
-    protected $_descriptions = array();
+    protected $_creators = [];
+    protected $_dates = [];
+    protected $_descriptions = [];
     protected $_embeddability = null;
-    protected $_formats = array();
-    protected $_identifiers = array();
-    protected $_languages = array();
-    protected $_publishers = array();
+    protected $_formats = [];
+    protected $_identifiers = [];
+    protected $_languages = [];
+    protected $_publishers = [];
     protected $_rating = null;
     protected $_review = null;
-    protected $_subjects = array();
-    protected $_titles = array();
+    protected $_subjects = [];
+    protected $_titles = [];
     protected $_viewability = null;
 
     /**
@@ -639,9 +639,9 @@ class Zend_Gdata_Books_VolumeEntry extends Zend_Gdata_Entry
         if ($position === false) {
             require_once 'Zend/Gdata/App/Exception.php';
             throw new Zend_Gdata_App_Exception('Slash not found in atom:id');
-        } else {
-            return substr($fullId, strrpos($fullId,'/') + 1);
         }
+
+        return substr($fullId, strrpos($fullId,'/') + 1);
     }
 
     /**

@@ -15,9 +15,9 @@
  * @category   Zend
  * @package    Zend_Service
  * @subpackage StrikeIron
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: StrikeIron.php 20096 2010-01-06 02:05:09Z bkarwin $
+ * @version    $Id$
  */
 
 
@@ -29,7 +29,7 @@
  * @category   Zend
  * @package    Zend_Service
  * @subpackage StrikeIron
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Service_StrikeIron
@@ -45,7 +45,7 @@ class Zend_Service_StrikeIron
      *
      * @param array  $options  Options to pass to Zend_Service_StrikeIron_Base constructor
      */
-    public function __construct($options = array())
+    public function __construct($options = [])
     {
         $this->_options = $options;
     }
@@ -58,7 +58,7 @@ class Zend_Service_StrikeIron
      * @return object       Zend_Service_StrikeIron_* instance
      * @throws Zend_Service_StrikeIron_Exception
      */
-    public function getService($options = array())
+    public function getService($options = [])
     {
         $class = isset($options['class']) ? $options['class'] : 'Base';
         unset($options['class']);
@@ -85,8 +85,6 @@ class Zend_Service_StrikeIron
         }
 
         // instantiate and return the service
-        $service = new $class(array_merge($this->_options, $options));
-        return $service;
+        return new $class(array_merge($this->_options, $options));
     }
-
 }

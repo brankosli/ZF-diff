@@ -15,9 +15,9 @@
  * @category   Zend
  * @package    Zend_Service
  * @subpackage Akismet
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Akismet.php 20096 2010-01-06 02:05:09Z bkarwin $
+ * @version    $Id$
  */
 
 
@@ -39,7 +39,7 @@ require_once 'Zend/Service/Abstract.php';
  * @category   Zend
  * @package    Zend_Service
  * @subpackage Akismet
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Service_Akismet extends Zend_Service_Abstract
@@ -234,14 +234,14 @@ class Zend_Service_Akismet extends Zend_Service_Abstract
         $uri    = 'http://' . $host . ':' . $this->getPort() . $path;
         $client = self::getHttpClient();
         $client->setUri($uri);
-        $client->setConfig(array(
+        $client->setConfig([
             'useragent'    => $this->getUserAgent(),
-        ));
+        ]);
 
-        $client->setHeaders(array(
+        $client->setHeaders([
             'Host'         => $host,
             'Content-Type' => 'application/x-www-form-urlencoded; charset=' . $this->getCharset()
-        ));
+        ]);
         $client->setParameterPost($params);
 
         $client->setMethod(Zend_Http_Client::POST);
@@ -265,10 +265,10 @@ class Zend_Service_Akismet extends Zend_Service_Abstract
             $blog = $this->getBlogUrl();
         }
 
-        $response = $this->_post('rest.akismet.com', '/1.1/verify-key', array(
+        $response = $this->_post('rest.akismet.com', '/1.1/verify-key', [
             'key'  => $key,
             'blog' => $blog
-        ));
+        ]);
 
         return ('valid' == $response->getBody());
     }

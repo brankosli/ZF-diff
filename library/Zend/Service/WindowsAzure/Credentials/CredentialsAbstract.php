@@ -14,22 +14,18 @@
  *
  * @category   Zend
  * @package    Zend_Service_WindowsAzure
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: SharedKeyCredentials.php 14561 2009-05-07 08:05:12Z unknown $
+ * @version    $Id$
  */
 
-/**
- * @see Zend_Http_Client
- */
-require_once 'Zend/Http/Client.php';
 
 /**
  * @category   Zend
  * @package    Zend_Service_WindowsAzure
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- */ 
+ */
 abstract class Zend_Service_WindowsAzure_Credentials_CredentialsAbstract
 {
 	/**
@@ -37,14 +33,14 @@ abstract class Zend_Service_WindowsAzure_Credentials_CredentialsAbstract
 	 */
 	const DEVSTORE_ACCOUNT       = "devstoreaccount1";
 	const DEVSTORE_KEY           = "Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==";
-	
+
 	/**
 	 * HTTP header prefixes
 	 */
 	const PREFIX_PROPERTIES      = "x-ms-prop-";
 	const PREFIX_METADATA        = "x-ms-meta-";
 	const PREFIX_STORAGE_HEADER  = "x-ms-";
-	
+
 	/**
 	 * Permissions
 	 */
@@ -59,21 +55,21 @@ abstract class Zend_Service_WindowsAzure_Credentials_CredentialsAbstract
 	 * @var string
 	 */
 	protected $_accountName = '';
-	
+
 	/**
 	 * Account key for Windows Azure
 	 *
 	 * @var string
 	 */
 	protected $_accountKey = '';
-	
+
 	/**
 	 * Use path-style URI's
 	 *
 	 * @var boolean
 	 */
 	protected $_usePathStyleUri = false;
-	
+
 	/**
 	 * Creates a new Zend_Service_WindowsAzure_Credentials_CredentialsAbstract instance
 	 *
@@ -90,7 +86,7 @@ abstract class Zend_Service_WindowsAzure_Credentials_CredentialsAbstract
 		$this->_accountKey = base64_decode($accountKey);
 		$this->_usePathStyleUri = $usePathStyleUri;
 	}
-	
+
 	/**
 	 * Set account name for Windows Azure
 	 *
@@ -102,7 +98,7 @@ abstract class Zend_Service_WindowsAzure_Credentials_CredentialsAbstract
 		$this->_accountName = $value;
 		return $this;
 	}
-	
+
 	/**
 	 * Set account key for Windows Azure
 	 *
@@ -114,7 +110,7 @@ abstract class Zend_Service_WindowsAzure_Credentials_CredentialsAbstract
 		$this->_accountKey = base64_decode($value);
 		return $this;
 	}
-	
+
 	/**
 	 * Set use path-style URI's
 	 *
@@ -126,7 +122,7 @@ abstract class Zend_Service_WindowsAzure_Credentials_CredentialsAbstract
 		$this->_usePathStyleUri = $value;
 		return $this;
 	}
-	
+
 	/**
 	 * Sign request URL with credentials
 	 *
@@ -140,7 +136,7 @@ abstract class Zend_Service_WindowsAzure_Credentials_CredentialsAbstract
 		$resourceType = Zend_Service_WindowsAzure_Storage::RESOURCE_UNKNOWN,
 		$requiredPermission = Zend_Service_WindowsAzure_Credentials_CredentialsAbstract::PERMISSION_READ
 	);
-	
+
 	/**
 	 * Sign request headers with credentials
 	 *
@@ -151,6 +147,7 @@ abstract class Zend_Service_WindowsAzure_Credentials_CredentialsAbstract
 	 * @param boolean $forTableStorage Is the request for table storage?
 	 * @param string $resourceType Resource type
 	 * @param string $requiredPermission Required permission
+	 * @param mixed  $rawData Raw post data
 	 * @return array Array of headers
 	 */
 	abstract public function signRequestHeaders(
@@ -160,38 +157,79 @@ abstract class Zend_Service_WindowsAzure_Credentials_CredentialsAbstract
 		$headers = null,
 		$forTableStorage = false,
 		$resourceType = Zend_Service_WindowsAzure_Storage::RESOURCE_UNKNOWN,
-		$requiredPermission = Zend_Service_WindowsAzure_Credentials_CredentialsAbstract::PERMISSION_READ
+		$requiredPermission = Zend_Service_WindowsAzure_Credentials_CredentialsAbstract::PERMISSION_READ,
+		$rawData = null
 	);
-	
-	
+
+
 	/**
 	 * Prepare query string for signing
-	 * 
+	 *
 	 * @param  string $value Original query string
 	 * @return string        Query string for signing
 	 */
 	protected function _prepareQueryStringForSigning($value)
 	{
-	    // Check for 'comp='
-	    if (strpos($value, 'comp=') === false) {
-	        // If not found, no query string needed
-	        return '';
-	    } else {
-	        // If found, make sure it is the only parameter being used      
-    		if (strlen($value) > 0 && strpos($value, '?') === 0) {
-    			$value = substr($value, 1);
-    		}
-    		
-    		// Split parts
-    		$queryParts = explode('&', $value);
-    		foreach ($queryParts as $queryPart) {
-    		    if (strpos($queryPart, 'comp=') !== false) {
-    		        return '?' . $queryPart;
-    		    }
-    		}
+	    // Return value
+	    $returnValue = [];
 
-    		// Should never happen...
-			return '';
+	    // Prepare query string
+	    $queryParts = $this->_makeArrayOfQueryString($value);
+	    foreach ($queryParts as $key => $value) {
+	    	$returnValue[] = $key . '=' . $value;
 	    }
+
+	    // Return
+	    if (count($returnValue) > 0) {
+	    	return '?' . implode('&', $returnValue);
+	    } else {
+	    	return '';
+	    }
+	}
+
+	/**
+	 * Make array of query string
+	 *
+	 * @param  string $value Query string
+	 * @return array         Array of key/value pairs
+	 */
+	protected function _makeArrayOfQueryString($value)
+	{
+		// Returnvalue
+		$returnValue = [];
+
+	    // Remove front ?
+   		if (strlen($value) > 0 && strpos($value, '?') === 0) {
+    		$value = substr($value, 1);
+    	}
+
+    	// Split parts
+    	$queryParts = explode('&', $value);
+    	foreach ($queryParts as $queryPart) {
+    		$queryPart = explode('=', $queryPart, 2);
+
+    		if ($queryPart[0] != '') {
+    			$returnValue[ $queryPart[0] ] = isset($queryPart[1]) ? $queryPart[1] : '';
+    		}
+    	}
+
+    	// Sort
+    	ksort($returnValue);
+
+    	// Return
+		return $returnValue;
+	}
+
+	/**
+	 * Returns an array value if the key is set, otherwide returns $valueIfNotSet
+	 *
+	 * @param array $array
+	 * @param mixed $key
+	 * @param mixed $valueIfNotSet
+	 * @return mixed
+	 */
+	protected function _issetOr($array, $key, $valueIfNotSet)
+	{
+		return isset($array[$key]) ? $array[$key] : $valueIfNotSet;
 	}
 }

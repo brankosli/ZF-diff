@@ -15,9 +15,9 @@
  * @category   Zend
  * @package    Zend_Gdata
  * @subpackage Gdata
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: EventEntry.php 20096 2010-01-06 02:05:09Z bkarwin $
+ * @version    $Id$
  */
 
 /**
@@ -92,21 +92,21 @@ require_once 'Zend/Gdata/Extension/EntryLink.php';
  * @category   Zend
  * @package    Zend_Gdata
  * @subpackage Gdata
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Gdata_Kind_EventEntry extends Zend_Gdata_Entry
 {
-    protected $_who = array();
-    protected $_when = array();
-    protected $_where = array();
+    protected $_who = [];
+    protected $_when = [];
+    protected $_where = [];
     protected $_recurrence = null;
     protected $_eventStatus = null;
     protected $_comments = null;
     protected $_transparency = null;
     protected $_visibility = null;
-    protected $_recurrenceException = array();
-    protected $_extendedProperty = array();
+    protected $_recurrenceException = [];
+    protected $_extendedProperty = [];
     protected $_originalEvent = null;
     protected $_entryLink = null;
 

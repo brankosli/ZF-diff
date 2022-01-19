@@ -15,9 +15,9 @@
  * @category   Zend
  * @package    Zend_Queue
  * @subpackage Adapter
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: AdapterAbstract.php 20096 2010-01-06 02:05:09Z bkarwin $
+ * @version    $Id$
  */
 
 /**
@@ -36,7 +36,7 @@ require_once 'Zend/Queue/Adapter/AdapterInterface.php';
  * @category   Zend
  * @package    Zend_Queue
  * @subpackage Adapter
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 abstract class Zend_Queue_Adapter_AdapterAbstract
@@ -57,14 +57,14 @@ abstract class Zend_Queue_Adapter_AdapterAbstract
      *
      * @var array
      */
-    protected $_options = array();
+    protected $_options = [];
 
     /**
      * Internal array of queues to save on lookups
      *
      * @var array
      */
-    protected $_queues = array();
+    protected $_queues = [];
 
     /**
      * Contains the Zend_Queue that this object
@@ -115,8 +115,8 @@ abstract class Zend_Queue_Adapter_AdapterAbstract
             $this->setQueue($queue);
         }
 
-        $adapterOptions = array();
-        $driverOptions  = array();
+        $adapterOptions = [];
+        $driverOptions  = [];
 
         // Normalize the options and merge with the defaults
         if (array_key_exists('options', $options)) {

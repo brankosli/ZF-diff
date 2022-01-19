@@ -15,9 +15,9 @@
  * @category   Zend
  * @package    Zend_Controller
  * @subpackage Dispatcher
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Abstract.php 20096 2010-01-06 02:05:09Z bkarwin $
+ * @version    $Id$
  */
 
 /** Zend_Controller_Dispatcher_Interface */
@@ -27,7 +27,7 @@ require_once 'Zend/Controller/Dispatcher/Interface.php';
  * @category   Zend
  * @package    Zend_Controller
  * @subpackage Dispatcher
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 abstract class Zend_Controller_Dispatcher_Abstract implements Zend_Controller_Dispatcher_Interface
@@ -61,7 +61,7 @@ abstract class Zend_Controller_Dispatcher_Abstract implements Zend_Controller_Di
      * controllers
      * @var array
      */
-    protected $_invokeParams = array();
+    protected $_invokeParams = [];
 
     /**
      * Path delimiter character
@@ -79,14 +79,14 @@ abstract class Zend_Controller_Dispatcher_Abstract implements Zend_Controller_Di
      * Word delimiter characters
      * @var array
      */
-    protected $_wordDelimiter = array('-', '.');
+    protected $_wordDelimiter = ['-', '.'];
 
     /**
      * Constructor
      *
      * @return void
      */
-    public function __construct(array $params = array())
+    public function __construct(array $params = [])
     {
         $this->setParams($params);
     }
@@ -336,7 +336,7 @@ abstract class Zend_Controller_Dispatcher_Abstract implements Zend_Controller_Di
     public function clearParams($name = null)
     {
         if (null === $name) {
-            $this->_invokeParams = array();
+            $this->_invokeParams = [];
         } elseif (is_string($name) && isset($this->_invokeParams[$name])) {
             unset($this->_invokeParams[$name]);
         } elseif (is_array($name)) {

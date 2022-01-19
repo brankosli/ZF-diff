@@ -14,9 +14,9 @@
  *
  * @category  Zend
  * @package   Zend_Validate
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license   http://framework.zend.com/license/new-bsd     New BSD License
- * @version   $Id: Crc32.php 20358 2010-01-17 19:03:49Z thomas $
+ * @version   $Id$
  */
 
 /**
@@ -29,7 +29,7 @@ require_once 'Zend/Validate/File/Hash.php';
  *
  * @category  Zend
  * @package   Zend_Validate
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license   http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Validate_File_Crc32 extends Zend_Validate_File_Hash
@@ -44,11 +44,11 @@ class Zend_Validate_File_Crc32 extends Zend_Validate_File_Hash
     /**
      * @var array Error message templates
      */
-    protected $_messageTemplates = array(
+    protected $_messageTemplates = [
         self::DOES_NOT_MATCH => "File '%value%' does not match the given crc32 hashes",
         self::NOT_DETECTED   => "A crc32 hash could not be evaluated for the given file",
-        self::NOT_FOUND      => "File '%value%' could not be found",
-    );
+        self::NOT_FOUND      => "File '%value%' is not readable or does not exist",
+    ];
 
     /**
      * Hash of the file
@@ -61,14 +61,15 @@ class Zend_Validate_File_Crc32 extends Zend_Validate_File_Hash
      * Sets validator options
      *
      * @param  string|array|Zend_Config $options
-     * @return void
+     * @throws Zend_Validate_Exception
+     * @return Zend_Validate_File_Crc32
      */
     public function __construct($options)
     {
         if ($options instanceof Zend_Config) {
             $options = $options->toArray();
         } elseif (is_scalar($options)) {
-            $options = array('hash1' => $options);
+            $options = ['hash1' => $options];
         } elseif (!is_array($options)) {
             require_once 'Zend/Validate/Exception.php';
             throw new Zend_Validate_Exception('Invalid options to validator provided');
@@ -96,7 +97,7 @@ class Zend_Validate_File_Crc32 extends Zend_Validate_File_Hash
     public function setHash($options)
     {
         if (!is_array($options)) {
-            $options = array($options);
+            $options = [$options];
         }
 
         $options['algorithm'] = 'crc32';
@@ -125,7 +126,7 @@ class Zend_Validate_File_Crc32 extends Zend_Validate_File_Hash
     public function addHash($options)
     {
         if (!is_array($options)) {
-            $options = array($options);
+            $options = [$options];
         }
 
         $options['algorithm'] = 'crc32';

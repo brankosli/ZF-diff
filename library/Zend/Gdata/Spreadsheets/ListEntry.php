@@ -16,9 +16,9 @@
  * @category     Zend
  * @package      Zend_Gdata
  * @subpackage   Spreadsheets
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: ListEntry.php 20096 2010-01-06 02:05:09Z bkarwin $
+ * @version    $Id$
  */
 
 /**
@@ -37,7 +37,7 @@ require_once 'Zend/Gdata/Spreadsheets/Extension/Custom.php';
  * @category     Zend
  * @package      Zend_Gdata
  * @subpackage   Spreadsheets
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Gdata_Spreadsheets_ListEntry extends Zend_Gdata_Entry
@@ -50,14 +50,14 @@ class Zend_Gdata_Spreadsheets_ListEntry extends Zend_Gdata_Entry
      * indexed by order added to this entry.
      * @var array
      */
-    protected $_custom = array();
+    protected $_custom = [];
 
     /**
      * List of custom row elements (Zend_Gdata_Spreadsheets_Extension_Custom),
      * indexed by element name.
      * @var array
      */
-    protected $_customByName = array();
+    protected $_customByName = [];
 
     /**
      * Constructs a new Zend_Gdata_Spreadsheets_ListEntry object.
@@ -136,7 +136,7 @@ class Zend_Gdata_Spreadsheets_ListEntry extends Zend_Gdata_Entry
      */
     public function setCustom($custom)
     {
-        $this->_custom = array();
+        $this->_custom = [];
         foreach ($custom as $c) {
             $this->addCustom($c);
         }

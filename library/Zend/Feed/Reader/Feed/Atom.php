@@ -14,9 +14,9 @@
  *
  * @category   Zend
  * @package    Zend_Feed_Reader
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Atom.php 20096 2010-01-06 02:05:09Z bkarwin $
+ * @version    $Id$
  */
 
 /**
@@ -32,7 +32,7 @@ require_once 'Zend/Feed/Reader/Extension/Atom/Feed.php';
 /**
  * @category   Zend
  * @package    Zend_Feed_Reader
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Feed_Reader_Feed_Atom extends Zend_Feed_Reader_FeedAbstract
@@ -158,6 +158,16 @@ class Zend_Feed_Reader_Feed_Atom extends Zend_Feed_Reader_FeedAbstract
     }
 
     /**
+     * Get the feed lastBuild date. This is not implemented in Atom.
+     *
+     * @return string|null
+     */
+    public function getLastBuildDate()
+    {
+        return null;
+    }
+
+    /**
      * Get the feed description
      *
      * @return string|null
@@ -278,6 +288,24 @@ class Zend_Feed_Reader_Feed_Atom extends Zend_Feed_Reader_FeedAbstract
     }
 
     /**
+     * Get feed image data
+     *
+     * @return array|null
+     */
+    public function getImage()
+    {
+        if (array_key_exists('image', $this->_data)) {
+            return $this->_data['image'];
+        }
+
+        $link = $this->getExtension('Atom')->getImage();
+
+        $this->_data['image'] = $link;
+
+        return $this->_data['image'];
+    }
+
+    /**
      * Get a link to the feed's XML Url
      *
      * @return string|null
@@ -289,6 +317,10 @@ class Zend_Feed_Reader_Feed_Atom extends Zend_Feed_Reader_FeedAbstract
         }
 
         $link = $this->getExtension('Atom')->getFeedLink();
+
+        if ($link === null || empty($link)) {
+            $link = $this->getOriginalSourceUri();
+        }
 
         $this->_data['feedlink'] = $link;
 
@@ -330,7 +362,7 @@ class Zend_Feed_Reader_Feed_Atom extends Zend_Feed_Reader_FeedAbstract
 
         return $this->_data['hubs'];
     }
-    
+
     /**
      * Get all categories
      *
@@ -343,8 +375,8 @@ class Zend_Feed_Reader_Feed_Atom extends Zend_Feed_Reader_FeedAbstract
         }
 
         $categoryCollection = $this->getExtension('Atom')->getCategories();
-        
-        if (count($categoryCollection) == 0) {
+
+        if (count($categoryCollection) === 0) {
             $categoryCollection = $this->getExtension('DublinCore')->getCategories();
         }
 
@@ -362,7 +394,7 @@ class Zend_Feed_Reader_Feed_Atom extends Zend_Feed_Reader_FeedAbstract
     {
         if ($this->getType() == Zend_Feed_Reader::TYPE_ATOM_10 ||
             $this->getType() == Zend_Feed_Reader::TYPE_ATOM_03) {
-            $entries = array();
+            $entries = [];
             $entries = $this->_xpath->evaluate('//atom:entry');
 
             foreach($entries as $index=>$entry) {

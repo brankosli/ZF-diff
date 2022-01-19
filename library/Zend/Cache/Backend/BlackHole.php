@@ -15,9 +15,9 @@
  * @category   Zend
  * @package    Zend_Cache
  * @subpackage Zend_Cache_Backend
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: BlackHole.php 17867 2009-08-28 09:42:11Z yoshida@zend.co.jp $
+ * @version    $Id$
  */
 
 /**
@@ -33,11 +33,11 @@ require_once 'Zend/Cache/Backend.php';
 /**
  * @package    Zend_Cache
  * @subpackage Zend_Cache_Backend
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-class Zend_Cache_Backend_BlackHole 
-    extends Zend_Cache_Backend 
+class Zend_Cache_Backend_BlackHole
+    extends Zend_Cache_Backend
     implements Zend_Cache_Backend_ExtendedInterface
 {
     /**
@@ -75,7 +75,7 @@ class Zend_Cache_Backend_BlackHole
      * @param  int    $specificLifetime If != false, set a specific lifetime for this cache record (null => infinite lifetime)
      * @return boolean true if no problem
      */
-    public function save($data, $id, $tags = array(), $specificLifetime = false)
+    public function save($data, $id, $tags = [], $specificLifetime = false)
     {
         return true;
     }
@@ -108,7 +108,7 @@ class Zend_Cache_Backend_BlackHole
      * @param  tags array $tags array of tags
      * @return boolean true if no problem
      */
-    public function clean($mode = Zend_Cache::CLEANING_MODE_ALL, $tags = array())
+    public function clean($mode = Zend_Cache::CLEANING_MODE_ALL, $tags = [])
     {
         return true;
     }
@@ -120,7 +120,7 @@ class Zend_Cache_Backend_BlackHole
      */
     public function getIds()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -130,7 +130,7 @@ class Zend_Cache_Backend_BlackHole
      */
     public function getTags()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -141,9 +141,9 @@ class Zend_Cache_Backend_BlackHole
      * @param array $tags array of tags
      * @return array array of matching cache ids (string)
      */
-    public function getIdsMatchingTags($tags = array())
+    public function getIdsMatchingTags($tags = [])
     {
-        return array();
+        return [];
     }
 
     /**
@@ -154,9 +154,9 @@ class Zend_Cache_Backend_BlackHole
      * @param array $tags array of tags
      * @return array array of not matching cache ids (string)
      */
-    public function getIdsNotMatchingTags($tags = array())
+    public function getIdsNotMatchingTags($tags = [])
     {
-        return array();
+        return [];
     }
 
     /**
@@ -167,9 +167,9 @@ class Zend_Cache_Backend_BlackHole
      * @param  array $tags array of tags
      * @return array array of any matching cache ids (string)
      */
-    public function getIdsMatchingAnyTags($tags = array())
+    public function getIdsMatchingAnyTags($tags = [])
     {
-        return array();
+        return [];
     }
 
     /**
@@ -227,14 +227,14 @@ class Zend_Cache_Backend_BlackHole
      */
     public function getCapabilities()
     {
-        return array(
+        return [
             'automatic_cleaning' => true,
             'tags'               => true,
             'expired_read'       => true,
             'priority'           => true,
             'infinite_lifetime'  => true,
             'get_list'           => true,
-        );
+        ];
     }
 
     /**

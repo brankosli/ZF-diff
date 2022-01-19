@@ -14,8 +14,9 @@
  *
  * @category   Zend
  * @package    Zend_Feed_Pubsubhubbub
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ * @version    $Id$
  */
 
 /**
@@ -26,7 +27,7 @@ require_once 'Zend/Feed/Pubsubhubbub.php';
 /**
  * @category   Zend
  * @package    Zend_Feed_Pubsubhubbub
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Feed_Pubsubhubbub_Publisher
@@ -37,7 +38,7 @@ class Zend_Feed_Pubsubhubbub_Publisher
      *
      * @var array
      */
-    protected $_hubUrls = array();
+    protected $_hubUrls = [];
 
     /**
      * An array of topic (Atom or RSS feed) URLs which have been updated and
@@ -45,7 +46,7 @@ class Zend_Feed_Pubsubhubbub_Publisher
      *
      * @var array
      */
-    protected $_updatedTopicUrls = array();
+    protected $_updatedTopicUrls = [];
 
     /**
      * An array of any errors including keys for 'response', 'hubUrl'.
@@ -53,7 +54,7 @@ class Zend_Feed_Pubsubhubbub_Publisher
      *
      * @var array
      */
-    protected $_errors = array();
+    protected $_errors = [];
 
     /**
      * An array of topic (Atom or RSS feed) URLs which have been updated and
@@ -61,19 +62,19 @@ class Zend_Feed_Pubsubhubbub_Publisher
      *
      * @var array
      */
-    protected $_parameters = array();
+    protected $_parameters = [];
 
     /**
      * Constructor; accepts an array or Zend_Config instance to preset
      * options for the Publisher without calling all supported setter
      * methods in turn.
      *
-     * @param  array|Zend_Config $options Options array or Zend_Config instance
-     * @return void
+     * @param  array|Zend_Config $config Options array or Zend_Config instance
+     * @throws Zend_Feed_Pubsubhubbub_Exception
      */
     public function __construct($config = null)
     {
-        if (!is_null($config)) {
+        if ($config !== null) {
             $this->setConfig($config);
         }
     }
@@ -81,7 +82,8 @@ class Zend_Feed_Pubsubhubbub_Publisher
     /**
      * Process any injected configuration options
      *
-     * @param  array|Zend_Config $options Options array or Zend_Config instance
+     * @param  array|Zend_Config $config Options array or Zend_Config instance
+     * @throws Zend_Feed_Pubsubhubbub_Exception
      * @return Zend_Feed_Pubsubhubbub_Publisher
      */
     public function setConfig($config)
@@ -109,6 +111,7 @@ class Zend_Feed_Pubsubhubbub_Publisher
      * Add a Hub Server URL supported by Publisher
      *
      * @param  string $url
+     * @throws Zend_Feed_Pubsubhubbub_Exception
      * @return Zend_Feed_Pubsubhubbub_Publisher
      */
     public function addHubUrl($url)
@@ -168,6 +171,7 @@ class Zend_Feed_Pubsubhubbub_Publisher
      * Add a URL to a topic (Atom or RSS feed) which has been updated
      *
      * @param  string $url
+     * @throws Zend_Feed_Pubsubhubbub_Exception
      * @return Zend_Feed_Pubsubhubbub_Publisher
      */
     public function addUpdatedTopicUrl($url)
@@ -238,9 +242,11 @@ class Zend_Feed_Pubsubhubbub_Publisher
                 .' of "' . $url . '" must be a non-empty string and a valid'
                 .'URL');
         }
+
         $client = $this->_getHttpClient();
         $client->setUri($url);
         $response = $client->request();
+
         if ($response->getStatus() !== 204) {
             require_once 'Zend/Feed/Pubsubhubbub/Exception.php';
             throw new Zend_Feed_Pubsubhubbub_Exception('Notification to Hub Server '
@@ -270,15 +276,18 @@ class Zend_Feed_Pubsubhubbub_Publisher
             throw new Zend_Feed_Pubsubhubbub_Exception('No Hub Server URLs'
                 . ' have been set so no notifcations can be sent');
         }
-        $this->_errors = array();
+
+        $this->_errors = [];
+
         foreach ($hubs as $url) {
             $client->setUri($url);
             $response = $client->request();
+
             if ($response->getStatus() !== 204) {
-                $this->_errors[] = array(
+                $this->_errors[] = [
                     'response' => $response,
                     'hubUrl' => $url
-                );
+                ];
             }
         }
     }
@@ -286,8 +295,9 @@ class Zend_Feed_Pubsubhubbub_Publisher
     /**
      * Add an optional parameter to the update notification requests
      *
-     * @param  string $name
+     * @param  string      $name
      * @param  string|null $value
+     * @throws Zend_Feed_Pubsubhubbub_Exception
      * @return Zend_Feed_Pubsubhubbub_Publisher
      */
     public function setParameter($name, $value = null)
@@ -305,7 +315,7 @@ class Zend_Feed_Pubsubhubbub_Publisher
             $this->removeParameter($name);
             return $this;
         }
-        if (empty($value) || (!is_string($value) && !is_null($value))) {
+        if (empty($value) || (!is_string($value) && $value !== null)) {
             require_once 'Zend/Feed/Pubsubhubbub/Exception.php';
             throw new Zend_Feed_Pubsubhubbub_Exception('Invalid parameter "value"'
                 .' of "' . $value . '" must be a non-empty string');
@@ -332,6 +342,7 @@ class Zend_Feed_Pubsubhubbub_Publisher
      * Remove an optional parameter for the notification requests
      *
      * @param  string $name
+     * @throws Zend_Feed_Pubsubhubbub_Exception
      * @return Zend_Feed_Pubsubhubbub_Publisher
      */
     public function removeParameter($name)
@@ -386,16 +397,18 @@ class Zend_Feed_Pubsubhubbub_Publisher
     /**
      * Get a basic prepared HTTP client for use
      *
+     * @throws Zend_Feed_Pubsubhubbub_Exception
+     * @throws Zend_Http_Client_Exception
      * @return Zend_Http_Client
      */
     protected function _getHttpClient()
     {
         $client = Zend_Feed_Pubsubhubbub::getHttpClient();
         $client->setMethod(Zend_Http_Client::POST);
-        $client->setConfig(array(
+        $client->setConfig([
             'useragent' => 'Zend_Feed_Pubsubhubbub_Publisher/' . Zend_Version::VERSION,
-        ));
-        $params   = array();
+        ]);
+        $params   = [];
         $params[] = 'hub.mode=publish';
         $topics   = $this->getUpdatedTopicUrls();
         if (empty($topics)) {
@@ -411,7 +424,7 @@ class Zend_Feed_Pubsubhubbub_Publisher
             $params[] = urlencode($name) . '=' . urlencode($value);
         }
         $paramString = implode('&', $params);
-        $client->setRawData($paramString);
+        $client->setRawData($paramString, 'application/x-www-form-urlencoded');
         return $client;
     }
 }

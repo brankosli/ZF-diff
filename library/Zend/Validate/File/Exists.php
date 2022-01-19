@@ -14,9 +14,9 @@
  *
  * @category  Zend
  * @package   Zend_Validate
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license   http://framework.zend.com/license/new-bsd     New BSD License
- * @version   $Id: Exists.php 20358 2010-01-17 19:03:49Z thomas $
+ * @version   $Id$
  */
 
 /**
@@ -29,7 +29,7 @@ require_once 'Zend/Validate/Abstract.php';
  *
  * @category  Zend
  * @package   Zend_Validate
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license   http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Validate_File_Exists extends Zend_Validate_Abstract
@@ -42,9 +42,9 @@ class Zend_Validate_File_Exists extends Zend_Validate_Abstract
     /**
      * @var array Error message templates
      */
-    protected $_messageTemplates = array(
+    protected $_messageTemplates = [
         self::DOES_NOT_EXIST => "File '%value%' does not exist",
-    );
+    ];
 
     /**
      * Internal list of directories
@@ -55,17 +55,17 @@ class Zend_Validate_File_Exists extends Zend_Validate_Abstract
     /**
      * @var array Error message template variables
      */
-    protected $_messageVariables = array(
+    protected $_messageVariables = [
         'directory' => '_directory'
-    );
+    ];
 
     /**
      * Sets validator options
      *
      * @param  string|array|Zend_Config $directory
-     * @return void
+     * @throws Zend_Validate_Exception
      */
-    public function __construct($directory = array())
+    public function __construct($directory = [])
     {
         if ($directory instanceof Zend_Config) {
             $directory = $directory->toArray();
@@ -113,6 +113,7 @@ class Zend_Validate_File_Exists extends Zend_Validate_Abstract
      * Adds the file directory which will be checked
      *
      * @param  string|array $directory The directory to add for validation
+     * @throws Zend_Validate_Exception
      * @return Zend_Validate_File_Extension Provides a fluent interface
      */
     public function addDirectory($directory)
@@ -159,7 +160,7 @@ class Zend_Validate_File_Exists extends Zend_Validate_Abstract
     public function isValid($value, $file = null)
     {
         $directories = $this->getDirectory(true);
-        if (($file !== null) and (!empty($file['destination']))) {
+        if (($file !== null) && (!empty($file['destination']))) {
             $directories[] = $file['destination'];
         } else if (!isset($file['name'])) {
             $file['name'] = $value;

@@ -15,9 +15,9 @@
  * @category   Zend
  * @package    Zend_Queue
  * @subpackage Adapter
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: PlatformJobQueue.php 20096 2010-01-06 02:05:09Z bkarwin $
+ * @version    $Id$
  */
 
 /**
@@ -31,7 +31,7 @@ require_once 'Zend/Queue/Adapter/AdapterAbstract.php';
  * @category   Zend
  * @package    Zend_Queue
  * @subpackage Adapter
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Queue_Adapter_PlatformJobQueue extends Zend_Queue_Adapter_AdapterAbstract
@@ -188,7 +188,7 @@ class Zend_Queue_Adapter_PlatformJobQueue extends Zend_Queue_Adapter_AdapterAbst
         }
 
         if ($message instanceof ZendAPI_Job) {
-            $message = array('data' => $message);
+            $message = ['data' => $message];
         }
 
         $zendApiJob = new $classname($message);
@@ -236,11 +236,11 @@ class Zend_Queue_Adapter_PlatformJobQueue extends Zend_Queue_Adapter_AdapterAbst
             Zend_Loader::loadClass($classname);
         }
 
-        $options = array(
+        $options = [
             'queue'        => $this->_queue,
             'data'         => $jobs,
             'messageClass' => $this->_queue->getMessageClass(),
-        );
+        ];
 
         $classname = $this->_queue->getMessageSetClass();
 
@@ -294,7 +294,7 @@ class Zend_Queue_Adapter_PlatformJobQueue extends Zend_Queue_Adapter_AdapterAbst
      */
     public function getCapabilities()
     {
-         return array(
+         return [
             'create'                => false,
             'delete'                => false,
             'getQueues'             => false,
@@ -303,7 +303,7 @@ class Zend_Queue_Adapter_PlatformJobQueue extends Zend_Queue_Adapter_AdapterAbst
             'send'                  => true,
             'receive'               => true,
             'deleteMessage'         => true,
-        );
+        ];
     }
 
     /********************************************************************
@@ -317,7 +317,7 @@ class Zend_Queue_Adapter_PlatformJobQueue extends Zend_Queue_Adapter_AdapterAbst
      */
     public function __sleep()
     {
-        return array('_options');
+        return ['_options'];
     }
 
     /**

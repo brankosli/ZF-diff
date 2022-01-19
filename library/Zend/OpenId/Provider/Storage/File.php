@@ -16,9 +16,9 @@
  * @category   Zend
  * @package    Zend_OpenId
  * @subpackage Zend_OpenId_Provider
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: File.php 20096 2010-01-06 02:05:09Z bkarwin $
+ * @version    $Id$
  */
 
 /**
@@ -32,7 +32,7 @@ require_once "Zend/OpenId/Provider/Storage.php";
  * @category   Zend
  * @package    Zend_OpenId
  * @subpackage Zend_OpenId_Provider
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_OpenId_Provider_Storage_File extends Zend_OpenId_Provider_Storage
@@ -115,7 +115,7 @@ class Zend_OpenId_Provider_Storage_File extends Zend_OpenId_Provider_Storage
                 fclose($lock);
                 return false;
             }
-            $data = serialize(array($handle, $macFunc, $secret, $expires));
+            $data = serialize([$handle, $macFunc, $secret, $expires]);
             fwrite($f, $data);
             fclose($f);
             fclose($lock);
@@ -229,7 +229,7 @@ class Zend_OpenId_Provider_Storage_File extends Zend_OpenId_Provider_Storage
                 fclose($lock);
                 return false;
             }
-            $data = serialize(array($id, $password, array()));
+            $data = serialize([$id, $password, []]);
             fwrite($f, $data);
             fclose($f);
             fclose($lock);
@@ -257,7 +257,7 @@ class Zend_OpenId_Provider_Storage_File extends Zend_OpenId_Provider_Storage
             fclose($lock);
             return false;
         }
-        try { 
+        try {
             $f = @fopen($name, 'r');
             if ($f === false) {
                 fclose($lock);
@@ -426,7 +426,7 @@ class Zend_OpenId_Provider_Storage_File extends Zend_OpenId_Provider_Storage
                     }
                     rewind($f);
                     ftruncate($f, 0);
-                    $data = serialize(array($id, $storedPassword, $sites));
+                    $data = serialize([$id, $storedPassword, $sites]);
                     fwrite($f, $data);
                     $ret = true;
                 }

@@ -16,9 +16,9 @@
  * @category   Zend
  * @package    Zend_Gdata
  * @subpackage Photos
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Photos.php 20096 2010-01-06 02:05:09Z bkarwin $
+ * @version    $Id$
  */
 
 /**
@@ -52,14 +52,14 @@ require_once 'Zend/Gdata/Photos/PhotoFeed.php';
  * @category   Zend
  * @package    Zend_Gdata
  * @subpackage Photos
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Gdata_Photos extends Zend_Gdata
 {
 
-    const PICASA_BASE_URI = 'http://picasaweb.google.com/data';
-    const PICASA_BASE_FEED_URI = 'http://picasaweb.google.com/data/feed';
+    const PICASA_BASE_URI = 'https://picasaweb.google.com/data';
+    const PICASA_BASE_FEED_URI = 'https://picasaweb.google.com/data/feed';
     const AUTH_SERVICE_NAME = 'lh2';
 
     /**
@@ -112,14 +112,14 @@ class Zend_Gdata_Photos extends Zend_Gdata
      *
      * @var array
      */
-    public static $namespaces = array(
-        array('gphoto', 'http://schemas.google.com/photos/2007', 1, 0),
-        array('photo', 'http://www.pheed.com/pheed/', 1, 0),
-        array('exif', 'http://schemas.google.com/photos/exif/2007', 1, 0),
-        array('georss', 'http://www.georss.org/georss', 1, 0),
-        array('gml', 'http://www.opengis.net/gml', 1, 0),
-        array('media', 'http://search.yahoo.com/mrss/', 1, 0)
-    );
+    public static $namespaces = [
+        ['gphoto', 'http://schemas.google.com/photos/2007', 1, 0],
+        ['photo', 'http://www.pheed.com/pheed/', 1, 0],
+        ['exif', 'http://schemas.google.com/photos/exif/2007', 1, 0],
+        ['georss', 'http://www.georss.org/georss', 1, 0],
+        ['gml', 'http://www.opengis.net/gml', 1, 0],
+        ['media', 'http://search.yahoo.com/mrss/', 1, 0]
+    ];
 
     /**
      * Create Zend_Gdata_Photos object
@@ -374,8 +374,8 @@ class Zend_Gdata_Photos extends Zend_Gdata
                 self::DEFAULT_PROJECTION . '/' . self::USER_PATH . '/' .
                 self::DEFAULT_USER;
         }
-        $newEntry = $this->insertEntry($album, $uri, 'Zend_Gdata_Photos_AlbumEntry');
-        return $newEntry;
+
+        return $this->insertEntry($album, $uri, 'Zend_Gdata_Photos_AlbumEntry');
     }
 
     /**
@@ -395,13 +395,14 @@ class Zend_Gdata_Photos extends Zend_Gdata
         if ($uri instanceof Zend_Gdata_Photos_AlbumEntry) {
             $uri = $uri->getLink(self::FEED_LINK_PATH)->href;
         }
+
         if ($uri === null) {
             require_once 'Zend/Gdata/App/InvalidArgumentException.php';
             throw new Zend_Gdata_App_InvalidArgumentException(
                     'URI must not be null');
         }
-        $newEntry = $this->insertEntry($photo, $uri, 'Zend_Gdata_Photos_PhotoEntry');
-        return $newEntry;
+
+        return $this->insertEntry($photo, $uri, 'Zend_Gdata_Photos_PhotoEntry');
     }
 
     /**
@@ -426,8 +427,8 @@ class Zend_Gdata_Photos extends Zend_Gdata
             throw new Zend_Gdata_App_InvalidArgumentException(
                     'URI must not be null');
         }
-        $newEntry = $this->insertEntry($tag, $uri, 'Zend_Gdata_Photos_TagEntry');
-        return $newEntry;
+
+        return $this->insertEntry($tag, $uri, 'Zend_Gdata_Photos_TagEntry');
     }
 
     /**
@@ -453,8 +454,8 @@ class Zend_Gdata_Photos extends Zend_Gdata
             throw new Zend_Gdata_App_InvalidArgumentException(
                     'URI must not be null');
         }
-        $newEntry = $this->insertEntry($comment, $uri, 'Zend_Gdata_Photos_CommentEntry');
-        return $newEntry;
+
+        return $this->insertEntry($comment, $uri, 'Zend_Gdata_Photos_CommentEntry');
     }
 
     /**

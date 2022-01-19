@@ -15,16 +15,16 @@
  * @category   Zend
  * @package    Zend_Json
  * @subpackage Server
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Request.php 20096 2010-01-06 02:05:09Z bkarwin $
+ * @version    $Id$
  */
 
 /**
  * @category   Zend
  * @package    Zend_Json
  * @subpackage Server
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Json_Server_Request
@@ -57,7 +57,7 @@ class Zend_Json_Server_Request
      * Request parameters
      * @var array
      */
-    protected $_params = array();
+    protected $_params = [];
 
     /**
      * JSON-RPC version of request
@@ -126,7 +126,7 @@ class Zend_Json_Server_Request
      */
     public function setParams(array $params)
     {
-        $this->_params = array();
+        $this->_params = [];
         return $this->addParams($params);
     }
 
@@ -259,9 +259,9 @@ class Zend_Json_Server_Request
      */
     public function toJson()
     {
-        $jsonArray = array(
+        $jsonArray = [
             'method' => $this->getMethod()
-        );
+        ];
         if (null !== ($id = $this->getId())) {
             $jsonArray['id'] = $id;
         }

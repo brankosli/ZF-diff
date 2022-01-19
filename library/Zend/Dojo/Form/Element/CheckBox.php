@@ -15,7 +15,7 @@
  * @category   Zend
  * @package    Zend_Dojo
  * @subpackage Form_Element
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
@@ -30,9 +30,9 @@ require_once 'Zend/Dojo/Form/Element/Dijit.php';
  * @uses       Zend_Dojo_Form_Element_Dijit
  * @package    Zend_Dojo
  * @subpackage Form_Element
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: CheckBox.php 20096 2010-01-06 02:05:09Z bkarwin $
+ * @version    $Id$
  */
 class Zend_Dojo_Form_Element_CheckBox extends Zend_Dojo_Form_Element_Dijit
 {
@@ -52,10 +52,10 @@ class Zend_Dojo_Form_Element_CheckBox extends Zend_Dojo_Form_Element_Dijit
      * Options that will be passed to the view helper
      * @var array
      */
-    public $options = array(
+    public $options = [
         'checkedValue'   => '1',
         'uncheckedValue' => '0',
-    );
+    ];
 
     /**
      * Value when checked
@@ -97,7 +97,7 @@ class Zend_Dojo_Form_Element_CheckBox extends Zend_Dojo_Form_Element_Dijit
         parent::setOptions($options);
 
         $curValue = $this->getValue();
-        $test     = array($this->getCheckedValue(), $this->getUncheckedValue());
+        $test     = [$this->getCheckedValue(), $this->getUncheckedValue()];
         if (!in_array($curValue, $test)) {
             $this->setValue($curValue);
         }

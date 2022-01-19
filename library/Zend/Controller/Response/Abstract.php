@@ -14,9 +14,9 @@
  *
  * @category   Zend
  * @package    Zend_Controller
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Abstract.php 21302 2010-03-02 23:01:38Z yoshida@zend.co.jp $
+ * @version    $Id$
  */
 
 /**
@@ -26,7 +26,7 @@
  *
  * @package Zend_Controller
  * @subpackage Response
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 abstract class Zend_Controller_Response_Abstract
@@ -35,25 +35,25 @@ abstract class Zend_Controller_Response_Abstract
      * Body content
      * @var array
      */
-    protected $_body = array();
+    protected $_body = [];
 
     /**
      * Exception stack
-     * @var Exception
+     * @var Throwable[]
      */
-    protected $_exceptions = array();
+    protected $_exceptions = [];
 
     /**
      * Array of headers. Each header is an array with keys 'name' and 'value'
      * @var array
      */
-    protected $_headers = array();
+    protected $_headers = [];
 
     /**
      * Array of raw headers. Each header is a single string, the entire header to emit
      * @var array
      */
-    protected $_headersRaw = array();
+    protected $_headersRaw = [];
 
     /**
      * HTTP response code to use in headers
@@ -93,7 +93,7 @@ abstract class Zend_Controller_Response_Abstract
      */
     protected function _normalizeHeader($name)
     {
-        $filtered = str_replace(array('-', '_'), ' ', (string) $name);
+        $filtered = str_replace(['-', '_'], ' ', (string) $name);
         $filtered = ucwords(strtolower($filtered));
         $filtered = str_replace(' ', '-', $filtered);
         return $filtered;
@@ -124,11 +124,11 @@ abstract class Zend_Controller_Response_Abstract
             }
         }
 
-        $this->_headers[] = array(
+        $this->_headers[] = [
             'name'    => $name,
             'value'   => $value,
             'replace' => $replace
-        );
+        ];
 
         return $this;
     }
@@ -179,7 +179,7 @@ abstract class Zend_Controller_Response_Abstract
      */
     public function clearHeaders()
     {
-        $this->_headers = array();
+        $this->_headers = [];
 
         return $this;
     }
@@ -240,7 +240,7 @@ abstract class Zend_Controller_Response_Abstract
      */
     public function clearRawHeaders()
     {
-        $this->_headersRaw = array();
+        $this->_headersRaw = [];
         return $this;
     }
 
@@ -257,7 +257,9 @@ abstract class Zend_Controller_Response_Abstract
         }
 
         $key = array_search($headerRaw, $this->_headersRaw);
-        unset($this->_headersRaw[$key]);
+        if ($key !== false) {
+            unset($this->_headersRaw[$key]);
+        }
 
         return $this;
     }
@@ -386,7 +388,7 @@ abstract class Zend_Controller_Response_Abstract
     public function setBody($content, $name = null)
     {
         if ((null === $name) || !is_string($name)) {
-            $this->_body = array('default' => (string) $content);
+            $this->_body = ['default' => (string) $content];
         } else {
             $this->_body[$name] = (string) $content;
         }
@@ -440,7 +442,7 @@ abstract class Zend_Controller_Response_Abstract
             return false;
         }
 
-        $this->_body = array();
+        $this->_body = [];
         return true;
     }
 
@@ -515,7 +517,7 @@ abstract class Zend_Controller_Response_Abstract
             unset($this->_body[$name]);
         }
 
-        $new = array($name => (string) $content);
+        $new = [$name => (string) $content];
         $this->_body = $new + $this->_body;
 
         return $this;
@@ -551,7 +553,7 @@ abstract class Zend_Controller_Response_Abstract
             return $this->append($name, $content);
         }
 
-        $ins  = array($name => (string) $content);
+        $ins  = [$name => (string) $content];
         $keys = array_keys($this->_body);
         $loc  = array_search($parent, $keys);
         if (!$before) {
@@ -589,10 +591,10 @@ abstract class Zend_Controller_Response_Abstract
     /**
      * Register an exception with the response
      *
-     * @param Exception $e
+     * @param Throwable $e
      * @return Zend_Controller_Response_Abstract
      */
-    public function setException(Exception $e)
+    public function setException(Throwable $e)
     {
         $this->_exceptions[] = $e;
         return $this;
@@ -678,7 +680,7 @@ abstract class Zend_Controller_Response_Abstract
      */
     public function getExceptionByType($type)
     {
-        $exceptions = array();
+        $exceptions = [];
         foreach ($this->_exceptions as $e) {
             if ($e instanceof $type) {
                 $exceptions[] = $e;
@@ -700,7 +702,7 @@ abstract class Zend_Controller_Response_Abstract
      */
     public function getExceptionByMessage($message)
     {
-        $exceptions = array();
+        $exceptions = [];
         foreach ($this->_exceptions as $e) {
             if ($message == $e->getMessage()) {
                 $exceptions[] = $e;
@@ -723,7 +725,7 @@ abstract class Zend_Controller_Response_Abstract
     public function getExceptionByCode($code)
     {
         $code       = (int) $code;
-        $exceptions = array();
+        $exceptions = [];
         foreach ($this->_exceptions as $e) {
             if ($code == $e->getCode()) {
                 $exceptions[] = $e;

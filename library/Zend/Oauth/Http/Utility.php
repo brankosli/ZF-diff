@@ -14,9 +14,9 @@
  *
  * @category   Zend
  * @package    Zend_Oauth
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Utility.php 21233 2010-02-28 13:48:58Z padraic $
+ * @version    $Id$
  */
 
 /** Zend_Oauth */
@@ -28,7 +28,7 @@ require_once 'Zend/Oauth/Http.php';
 /**
  * @category   Zend
  * @package    Zend_Oauth
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Oauth_Http_Utility
@@ -43,24 +43,24 @@ class Zend_Oauth_Http_Utility
      * @return array
      */
     public function assembleParams(
-        $url, 
+        $url,
         Zend_Oauth_Config_ConfigInterface $config,
         array $serviceProviderParams = null
     ) {
-        $params = array(
+        $params = [
             'oauth_consumer_key'     => $config->getConsumerKey(),
             'oauth_nonce'            => $this->generateNonce(),
             'oauth_signature_method' => $config->getSignatureMethod(),
             'oauth_timestamp'        => $this->generateTimestamp(),
             'oauth_version'          => $config->getVersion(),
-        );
-        
+        ];
+
         if ($config->getToken()->getToken() != null) {
             $params['oauth_token'] = $config->getToken()->getToken();
         }
 
 
-        if (!is_null($serviceProviderParams)) {
+        if ($serviceProviderParams !== null) {
             $params = array_merge($params, $serviceProviderParams);
         }
 
@@ -94,10 +94,10 @@ class Zend_Oauth_Http_Utility
                 }
             }
         }
-        $encodedParams = array();
+        $encodedParams = [];
         foreach ($params as $key => $value) {
-            $encodedParams[] = self::urlEncode($key) 
-                             . '=' 
+            $encodedParams[] = self::urlEncode($key)
+                             . '='
                              . self::urlEncode($value);
         }
         return implode('&', $encodedParams);
@@ -105,17 +105,17 @@ class Zend_Oauth_Http_Utility
 
     /**
      * Cast to authorization header
-     * 
-     * @param  array $params 
-     * @param  null|string $realm 
-     * @param  bool $excludeCustomParams 
+     *
+     * @param  array $params
+     * @param  null|string $realm
+     * @param  bool $excludeCustomParams
      * @return void
      */
     public function toAuthorizationHeader(array $params, $realm = null, $excludeCustomParams = true)
     {
-        $headerValue = array(
+        $headerValue = [
             'OAuth realm="' . $realm . '"',
-        );
+        ];
 
         foreach ($params as $key => $value) {
             if ($excludeCustomParams) {
@@ -123,7 +123,7 @@ class Zend_Oauth_Http_Utility
                     continue;
                 }
             }
-            $headerValue[] = self::urlEncode($key) 
+            $headerValue[] = self::urlEncode($key)
                            . '="'
                            . self::urlEncode($value) . '"';
         }
@@ -132,13 +132,13 @@ class Zend_Oauth_Http_Utility
 
     /**
      * Sign request
-     * 
-     * @param  array $params 
-     * @param  string $signatureMethod 
-     * @param  string $consumerSecret 
-     * @param  null|string $tokenSecret 
-     * @param  null|string $method 
-     * @param  null|string $url 
+     *
+     * @param  array $params
+     * @param  string $signatureMethod
+     * @param  string $consumerSecret
+     * @param  null|string $tokenSecret
+     * @param  null|string $method
+     * @param  null|string $url
      * @return string
      */
     public function sign(
@@ -161,15 +161,15 @@ class Zend_Oauth_Http_Utility
 
     /**
      * Parse query string
-     * 
-     * @param  mixed $query 
+     *
+     * @param  mixed $query
      * @return array
      */
     public function parseQueryString($query)
     {
-        $params = array();
+        $params = [];
         if (empty($query)) {
-            return array();
+            return [];
         }
 
         // Not remotely perfect but beats parse_str() which converts
@@ -184,7 +184,7 @@ class Zend_Oauth_Http_Utility
 
     /**
      * Generate nonce
-     * 
+     *
      * @return string
      */
     public function generateNonce()
@@ -194,7 +194,7 @@ class Zend_Oauth_Http_Utility
 
     /**
      * Generate timestamp
-     * 
+     *
      * @return int
      */
     public function generateTimestamp()
@@ -204,8 +204,8 @@ class Zend_Oauth_Http_Utility
 
     /**
      * urlencode a value
-     * 
-     * @param  string $value 
+     *
+     * @param  string $value
      * @return string
      */
     public static function urlEncode($value)

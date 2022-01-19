@@ -15,7 +15,7 @@
  * @category   Zend
  * @package    Zend_Dojo
  * @subpackage Form_Element
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
@@ -30,9 +30,9 @@ require_once 'Zend/Dojo/Form/Element/Dijit.php';
  * @uses       Zend_Dojo_Form_Element_Dijit
  * @package    Zend_Dojo
  * @subpackage Form_Element
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: DijitMulti.php 20096 2010-01-06 02:05:09Z bkarwin $
+ * @version    $Id$
  */
 abstract class Zend_Dojo_Form_Element_DijitMulti extends Zend_Dojo_Form_Element_Dijit
 {
@@ -40,7 +40,7 @@ abstract class Zend_Dojo_Form_Element_DijitMulti extends Zend_Dojo_Form_Element_
      * Array of options for multi-item
      * @var array
      */
-    public $options = array();
+    public $options = [];
 
     /**
      * Flag: autoregister inArray validator?
@@ -58,7 +58,7 @@ abstract class Zend_Dojo_Form_Element_DijitMulti extends Zend_Dojo_Form_Element_
      * Which values are translated already?
      * @var array
      */
-    protected $_translated = array();
+    protected $_translated = [];
 
     /**
      * Retrieve separator
@@ -90,7 +90,7 @@ abstract class Zend_Dojo_Form_Element_DijitMulti extends Zend_Dojo_Form_Element_
     protected function _getMultiOptions()
     {
         if (null === $this->options || !is_array($this->options)) {
-            $this->options = array();
+            $this->options = [];
         }
 
         return $this->options;
@@ -207,8 +207,8 @@ abstract class Zend_Dojo_Form_Element_DijitMulti extends Zend_Dojo_Form_Element_
      */
     public function clearMultiOptions()
     {
-        $this->options = array();
-        $this->_translated = array();
+        $this->options = [];
+        $this->_translated = [];
         return $this;
     }
 
@@ -251,7 +251,7 @@ abstract class Zend_Dojo_Form_Element_DijitMulti extends Zend_Dojo_Form_Element_
                 $this->addValidator(
                     'InArray',
                     true,
-                    array(array_keys($options))
+                    [array_keys($options)]
                 );
             }
         }
@@ -294,10 +294,9 @@ abstract class Zend_Dojo_Form_Element_DijitMulti extends Zend_Dojo_Form_Element_
             return $value;
         } else {
             if (null !== ($translator = $this->getTranslator())) {
-                if ($translator->isTranslated($value)) {
-                    return $translator->translate($value);
-                }
+                return $translator->translate($value);
             }
+
             return $value;
         }
     }

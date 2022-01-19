@@ -14,9 +14,9 @@
  *
  * @category   Zend
  * @package    Zend_Layout
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Layout.php 20096 2010-01-06 02:05:09Z bkarwin $
+ * @version    $Id$
  */
 
 /**
@@ -24,7 +24,7 @@
  *
  * @category   Zend
  * @package    Zend_Layout
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Layout
@@ -174,12 +174,12 @@ class Zend_Layout
     {
         if (null === self::$_mvcInstance) {
             self::$_mvcInstance = new self($options, true);
-        }
-
-        if (is_string($options)) {
-            self::$_mvcInstance->setLayoutPath($options);
-        } elseif (is_array($options) || $options instanceof Zend_Config) {
-            self::$_mvcInstance->setOptions($options);
+        } else {
+            if (is_string($options)) {
+                self::$_mvcInstance->setLayoutPath($options);
+            } elseif (is_array($options) || $options instanceof Zend_Config) {
+                self::$_mvcInstance->setOptions($options);
+            }
         }
 
         return self::$_mvcInstance;
@@ -640,7 +640,7 @@ class Zend_Layout
             require_once 'Zend/Filter/Inflector.php';
             $inflector = new Zend_Filter_Inflector();
             $inflector->setTargetReference($this->_inflectorTarget)
-                      ->addRules(array(':script' => array('Word_CamelCaseToDash', 'StringToLower')))
+                      ->addRules([':script' => ['Word_CamelCaseToDash', 'StringToLower']])
                       ->setStaticRuleReference('suffix', $this->_viewSuffix);
             $this->setInflector($inflector);
         }
@@ -778,7 +778,7 @@ class Zend_Layout
 
         if ($this->inflectorEnabled() && (null !== ($inflector = $this->getInflector())))
         {
-            $name = $this->_inflector->filter(array('script' => $name));
+            $name = $this->_inflector->filter(['script' => $name]);
         }
 
         $view = $this->getView();

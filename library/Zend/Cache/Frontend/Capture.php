@@ -15,8 +15,9 @@
  * @category   Zend
  * @package    Zend_Cache
  * @subpackage Zend_Cache_Frontend
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ * @version    $Id$
  */
 
 
@@ -29,7 +30,7 @@ require_once 'Zend/Cache/Core.php';
 /**
  * @package    Zend_Cache
  * @subpackage Zend_Cache_Frontend
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Cache_Frontend_Capture extends Zend_Cache_Core
@@ -38,14 +39,14 @@ class Zend_Cache_Frontend_Capture extends Zend_Cache_Core
      * Page identifiers
      * @var array
      */
-    protected $_idStack = array();
+    protected $_idStack = [];
 
     /**
      * Tags
      * @var array
      */
-    protected $_tags = array();
-    
+    protected $_tags = [];
+
     protected $_extension = null;
 
     /**
@@ -58,7 +59,7 @@ class Zend_Cache_Frontend_Capture extends Zend_Cache_Core
     {
         $this->_tags = $tags;
         $this->_extension = $extension;
-        ob_start(array($this, '_flush'));
+        ob_start([$this, '_flush']);
         ob_implicit_flush(false);
         $this->_idStack[] = $id;
         return false;
@@ -74,11 +75,11 @@ class Zend_Cache_Frontend_Capture extends Zend_Cache_Core
     public function _flush($data)
     {
         $id = array_pop($this->_idStack);
-        if (is_null($id)) {
+        if ($id === null) {
             Zend_Cache::throwException('use of _flush() without a start()');
         }
         if ($this->_extension) {
-            $this->save(serialize(array($data, $this->_extension)), $id, $this->_tags);
+            $this->save(serialize([$data, $this->_extension]), $id, $this->_tags);
         } else {
             $this->save($data, $id, $this->_tags);
         }

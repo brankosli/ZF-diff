@@ -14,9 +14,9 @@
  *
  * @category   Zend
  * @package    Zend_Config
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Ini.php 20096 2010-01-06 02:05:09Z bkarwin $
+ * @version    $Id$
  */
 
 
@@ -29,7 +29,7 @@ require_once 'Zend/Config.php';
 /**
  * @category   Zend
  * @package    Zend_Config
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Config_Ini extends Zend_Config
@@ -83,16 +83,17 @@ class Zend_Config_Ini extends Zend_Config
      *
      * The $options parameter may be provided as either a boolean or an array.
      * If provided as a boolean, this sets the $allowModifications option of
-     * Zend_Config. If provided as an array, there are two configuration
+     * Zend_Config. If provided as an array, there are three configuration
      * directives that may be set. For example:
      *
      * $options = array(
      *     'allowModifications' => false,
-     *     'nestSeparator'      => '->'
+     *     'nestSeparator'      => ':',
+     *     'skipExtends'        => false,
      *      );
      *
      * @param  string        $filename
-     * @param  string|null   $section
+     * @param  mixed         $section
      * @param  boolean|array $options
      * @throws Zend_Config_Exception
      * @return void
@@ -126,10 +127,10 @@ class Zend_Config_Ini extends Zend_Config
 
         if (null === $section) {
             // Load entire file
-            $dataArray = array();
+            $dataArray = [];
             foreach ($iniArray as $sectionName => $sectionData) {
                 if(!is_array($sectionData)) {
-                    $dataArray = $this->_arrayMergeRecursive($dataArray, $this->_processKey(array(), $sectionName, $sectionData));
+                    $dataArray = $this->_arrayMergeRecursive($dataArray, $this->_processKey([], $sectionName, $sectionData));
                 } else {
                     $dataArray[$sectionName] = $this->_processSection($iniArray, $sectionName);
                 }
@@ -138,9 +139,9 @@ class Zend_Config_Ini extends Zend_Config
         } else {
             // Load one or more sections
             if (!is_array($section)) {
-                $section = array($section);
+                $section = [$section];
             }
-            $dataArray = array();
+            $dataArray = [];
             foreach ($section as $sectionName) {
                 if (!isset($iniArray[$sectionName])) {
                     /**
@@ -157,21 +158,21 @@ class Zend_Config_Ini extends Zend_Config
 
         $this->_loadedSection = $section;
     }
-    
+
     /**
      * Load the INI file from disk using parse_ini_file(). Use a private error
      * handler to convert any loading errors into a Zend_Config_Exception
-     * 
+     *
      * @param string $filename
      * @throws Zend_Config_Exception
      * @return array
      */
     protected function _parseIniFile($filename)
     {
-        set_error_handler(array($this, '_loadFileErrorHandler'));
+        set_error_handler([$this, '_loadFileErrorHandler']);
         $iniArray = parse_ini_file($filename, true); // Warnings and errors are suppressed
         restore_error_handler();
-        
+
         // Check if there was a error while loading file
         if ($this->_loadFileErrorStr !== null) {
             /**
@@ -180,7 +181,7 @@ class Zend_Config_Ini extends Zend_Config
             require_once 'Zend/Config/Exception.php';
             throw new Zend_Config_Exception($this->_loadFileErrorStr);
         }
-        
+
         return $iniArray;
     }
 
@@ -199,7 +200,7 @@ class Zend_Config_Ini extends Zend_Config
     protected function _loadIniFile($filename)
     {
         $loaded = $this->_parseIniFile($filename);
-        $iniArray = array();
+        $iniArray = [];
         foreach ($loaded as $key => $data)
         {
             $pieces = explode($this->_sectionSeparator, $key);
@@ -211,7 +212,7 @@ class Zend_Config_Ini extends Zend_Config
 
                 case 2:
                     $extendedSection = trim($pieces[1]);
-                    $iniArray[$thisSection] = array_merge(array(';extends'=>$extendedSection), $data);
+                    $iniArray[$thisSection] = array_merge([';extends'=>$extendedSection], $data);
                     break;
 
                 default:
@@ -237,7 +238,7 @@ class Zend_Config_Ini extends Zend_Config
      * @throws Zend_Config_Exception
      * @return array
      */
-    protected function _processSection($iniArray, $section, $config = array())
+    protected function _processSection($iniArray, $section, $config = [])
     {
         $thisSection = $iniArray[$section];
 
@@ -281,9 +282,9 @@ class Zend_Config_Ini extends Zend_Config
                 if (!isset($config[$pieces[0]])) {
                     if ($pieces[0] === '0' && !empty($config)) {
                         // convert the current values in $config into an array
-                        $config = array($pieces[0] => $config);
+                        $config = [$pieces[0] => $config];
                     } else {
-                        $config[$pieces[0]] = array();
+                        $config[$pieces[0]] = [];
                     }
                 } elseif (!is_array($config[$pieces[0]])) {
                     /**

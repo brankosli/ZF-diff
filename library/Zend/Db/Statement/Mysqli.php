@@ -15,9 +15,9 @@
  * @category   Zend
  * @package    Zend_Db
  * @subpackage Statement
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Mysqli.php 20096 2010-01-06 02:05:09Z bkarwin $
+ * @version    $Id$
  */
 
 
@@ -33,7 +33,7 @@ require_once 'Zend/Db/Statement.php';
  * @category   Zend
  * @package    Zend_Db
  * @subpackage Statement
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Db_Statement_Mysqli extends Zend_Db_Statement
@@ -166,11 +166,11 @@ class Zend_Db_Statement_Mysqli extends Zend_Db_Statement
         if (!$this->_stmt) {
             return false;
         }
-        return array(
+        return [
             substr($this->_stmt->sqlstate, 0, 5),
             $this->_stmt->errno,
             $this->_stmt->error,
-        );
+        ];
     }
 
     /**
@@ -194,12 +194,12 @@ class Zend_Db_Statement_Mysqli extends Zend_Db_Statement
         // send $params as input parameters to the statement
         if ($params) {
             array_unshift($params, str_repeat('s', count($params)));
-            $stmtParams = array();
+            $stmtParams = [];
             foreach ($params as $k => &$value) {
                 $stmtParams[$k] = &$value;
             }
             call_user_func_array(
-                array($this->_stmt, 'bind_param'),
+                [$this->_stmt, 'bind_param'],
                 $stmtParams
                 );
         }
@@ -231,7 +231,7 @@ class Zend_Db_Statement_Mysqli extends Zend_Db_Statement
         if ($this->_meta !== false) {
 
             // get the column names that will result
-            $this->_keys = array();
+            $this->_keys = [];
             foreach ($this->_meta->fetch_fields() as $col) {
                 $this->_keys[] = $this->_adapter->foldCase($col->name);
             }
@@ -242,7 +242,7 @@ class Zend_Db_Statement_Mysqli extends Zend_Db_Statement
             // set up references to the result binding space.
             // just passing $this->_values in the call_user_func_array()
             // below won't work, you need references.
-            $refs = array();
+            $refs = [];
             foreach ($this->_values as $i => &$f) {
                 $refs[$i] = &$f;
             }
@@ -250,7 +250,7 @@ class Zend_Db_Statement_Mysqli extends Zend_Db_Statement
             $this->_stmt->store_result();
             // bind to the result variables
             call_user_func_array(
-                array($this->_stmt, 'bind_result'),
+                [$this->_stmt, 'bind_result'],
                 $this->_values
             );
         }
@@ -290,7 +290,7 @@ class Zend_Db_Statement_Mysqli extends Zend_Db_Statement
 
         // dereference the result values, otherwise things like fetchAll()
         // return the same values for every entry (because of the reference).
-        $values = array();
+        $values = [];
         foreach ($this->_values as $key => $val) {
             $values[] = $val;
         }

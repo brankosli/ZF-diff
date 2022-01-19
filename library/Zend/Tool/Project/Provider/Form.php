@@ -15,20 +15,19 @@
  * @category   Zend
  * @package    Zend_Tool
  * @subpackage Framework
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Form.php 20096 2010-01-06 02:05:09Z bkarwin $
+ * @version    $Id$
  */
 
 /**
  * @category   Zend
  * @package    Zend_Tool
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Tool_Project_Provider_Form extends Zend_Tool_Project_Provider_Abstract
 {
-
     public static function createResource(Zend_Tool_Project_Profile $profile, $formName, $moduleName = null)
     {
         if (!is_string($formName)) {
@@ -44,12 +43,10 @@ class Zend_Tool_Project_Provider_Form extends Zend_Tool_Project_Provider_Abstrac
             throw new Zend_Tool_Project_Provider_Exception($exceptionMessage);
         }
 
-        $newForm = $formsDirectory->createResource(
-            'formFile', 
-            array('formName' => $formName, 'moduleName' => $moduleName)
+        return $formsDirectory->createResource(
+            'formFile',
+            ['formName' => $formName, 'moduleName' => $moduleName]
             );
-
-        return $newForm;
     }
 
     /**
@@ -58,7 +55,9 @@ class Zend_Tool_Project_Provider_Form extends Zend_Tool_Project_Provider_Abstrac
      * @param Zend_Tool_Project_Profile $profile
      * @param string $formName
      * @param string $moduleName
-     * @return Zend_Tool_Project_Profile_Resource
+     * @return bool
+     * @throws Zend_Tool_Project_Profile_Exception
+     * @throws Zend_Tool_Project_Provider_Exception
      */
     public static function hasResource(Zend_Tool_Project_Profile $profile, $formName, $moduleName = null)
     {
@@ -67,34 +66,60 @@ class Zend_Tool_Project_Provider_Form extends Zend_Tool_Project_Provider_Abstrac
         }
 
         $formsDirectory = self::_getFormsDirectoryResource($profile, $moduleName);
-        return (($formsDirectory->search(array('formFile' => array('formName' => $formName)))) instanceof Zend_Tool_Project_Profile_Resource);
+        return (($formsDirectory->search(['formFile' => ['formName' => $formName]])) instanceof Zend_Tool_Project_Profile_Resource);
     }
-    
+
     /**
      * _getFormsDirectoryResource()
      *
      * @param Zend_Tool_Project_Profile $profile
      * @param string $moduleName
      * @return Zend_Tool_Project_Profile_Resource
+     * @throws Zend_Tool_Project_Profile_Exception
      */
     protected static function _getFormsDirectoryResource(Zend_Tool_Project_Profile $profile, $moduleName = null)
     {
-        $profileSearchParams = array();
+        $profileSearchParams = [];
 
         if ($moduleName != null && is_string($moduleName)) {
-            $profileSearchParams = array('modulesDirectory', 'moduleDirectory' => array('moduleName' => $moduleName));
+            $profileSearchParams = ['modulesDirectory', 'moduleDirectory' => ['moduleName' => $moduleName]];
         }
 
         $profileSearchParams[] = 'formsDirectory';
 
         return $profile->search($profileSearchParams);
     }
-    
+
+    public function enable($module = null)
+    {
+        $this->_loadProfile(self::NO_PROFILE_THROW_EXCEPTION);
+
+        // determine if testing is enabled in the project
+        $testingEnabled = Zend_Tool_Project_Provider_Test::isTestingEnabled($this->_loadedProfile);
+
+        $formDirectoryResource = self::_getFormsDirectoryResource($this->_loadedProfile, $module);
+
+        if ($formDirectoryResource->isEnabled()) {
+            throw new Zend_Tool_Project_Provider_Exception('This project already has forms enabled.');
+        }
+
+        if ($this->_registry->getRequest()->isPretend()) {
+            $this->_registry->getResponse()->appendContent('Would enable forms directory at ' . $formDirectoryResource->getContext()->getPath());
+        } else {
+            $this->_registry->getResponse()->appendContent('Enabling forms directory at ' . $formDirectoryResource->getContext()->getPath());
+            $formDirectoryResource->setEnabled(true);
+            $formDirectoryResource->create();
+            $this->_storeProfile();
+        }
+    }
+
     /**
      * Create a new form
      *
      * @param string $name
      * @param string $module
+     * @throws Zend_Tool_Project_Exception
+     * @throws Zend_Tool_Project_Provider_Exception
      */
     public function create($name, $module = null)
     {
@@ -111,9 +136,9 @@ class Zend_Tool_Project_Provider_Form extends Zend_Tool_Project_Provider_Abstrac
         if (preg_match('#[_-]#', $name)) {
             throw new Zend_Tool_Project_Provider_Exception('Form names should be camel cased.');
         }
-        
+
         $name = ucwords($name);
-        
+
         try {
             $formResource = self::createResource($this->_loadedProfile, $name, $module);
 
@@ -149,8 +174,5 @@ class Zend_Tool_Project_Provider_Form extends Zend_Tool_Project_Provider_Abstrac
 
             $this->_storeProfile();
         }
-
     }
-
-
 }

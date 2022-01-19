@@ -15,9 +15,9 @@
  * @category   Zend
  * @package    Zend_Queue
  * @subpackage Message
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Message.php 20096 2010-01-06 02:05:09Z bkarwin $
+ * @version    $Id$
  */
 
 /**
@@ -26,7 +26,7 @@
  * @category   Zend
  * @package    Zend_Queue
  * @subpackage Message
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Queue_Message
@@ -36,7 +36,7 @@ class Zend_Queue_Message
      *
      * @var array
      */
-    protected $_data = array();
+    protected $_data = [];
 
      /**
      * Connected is true if we have a reference to a live
@@ -67,7 +67,7 @@ class Zend_Queue_Message
      * @param  array $options
      * @throws Zend_Queue_Exception
      */
-    public function __construct(array $options = array())
+    public function __construct(array $options = [])
     {
         if (isset($options['queue'])) {
             if ($options['queue'] instanceof Zend_Queue) {
@@ -151,7 +151,7 @@ class Zend_Queue_Message
      */
     public function __sleep()
     {
-        return array('_queueClass', '_data');
+        return ['_queueClass', '_data'];
     }
 
     /**

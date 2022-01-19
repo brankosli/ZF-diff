@@ -15,9 +15,9 @@
  * @category   Zend
  * @package    Zend_Markup
  * @subpackage Renderer
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: RendererAbstract.php 20956 2010-02-06 17:58:58Z kokx $
+ * @version    $Id$
  */
 
 /**
@@ -39,7 +39,7 @@ require_once 'Zend/Markup/Renderer/TokenConverterInterface.php';
  * @category   Zend
  * @package    Zend_Markup
  * @subpackage Renderer
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 abstract class Zend_Markup_Renderer_RendererAbstract
@@ -53,7 +53,7 @@ abstract class Zend_Markup_Renderer_RendererAbstract
      *
      * @var array
      */
-    protected $_markups = array();
+    protected $_markups = [];
 
     /**
      * Parser
@@ -88,7 +88,7 @@ abstract class Zend_Markup_Renderer_RendererAbstract
      *
      * @var array
      */
-    protected $_groups = array();
+    protected $_groups = [];
 
     /**
      * Plugin loader for tags
@@ -119,7 +119,7 @@ abstract class Zend_Markup_Renderer_RendererAbstract
      *
      * @return void
      */
-    public function __construct($options = array())
+    public function __construct($options = [])
     {
         if ($options instanceof Zend_Config) {
             $options = $options->toArray();
@@ -130,9 +130,6 @@ abstract class Zend_Markup_Renderer_RendererAbstract
         }
         if (isset($options['parser'])) {
             $this->setParser($options['parser']);
-        }
-        if (isset($options['useDefaultTags']) && ($options['useDefaultTags'] === false)) {
-            $this->removeDefaultTags();
         }
         if (!isset($options['useDefaultFilters']) || ($options['useDefaultFilters'] === true)) {
             $this->addDefaultFilters();
@@ -179,13 +176,11 @@ abstract class Zend_Markup_Renderer_RendererAbstract
      *
      * @param string $encoding
      *
-     * @return Zend_Markup_Renderer_RendererAbstract
+     * @return void
      */
     public static function setEncoding($encoding)
     {
         self::$_encoding = $encoding;
-
-        return $this;
     }
 
     /**
@@ -254,10 +249,10 @@ abstract class Zend_Markup_Renderer_RendererAbstract
                         'No alias was provided but tag was defined as such');
             }
 
-            $this->_markups[$name] = array(
+            $this->_markups[$name] = [
                 'type' => self::TYPE_ALIAS,
                 'name' => $options['name']
-            );
+            ];
         } else {
             if ($type && array_key_exists('empty', $options) && $options['empty']) {
                 // add a single replace markup
@@ -295,7 +290,7 @@ abstract class Zend_Markup_Renderer_RendererAbstract
      */
     public function clearMarkups()
     {
-        $this->_markups = array();
+        $this->_markups = [];
     }
 
     /**
@@ -557,7 +552,7 @@ abstract class Zend_Markup_Renderer_RendererAbstract
     public function getDefaultFilter()
     {
         if (null === $this->_defaultFilter) {
-            $this->setDefaultFilter();
+            $this->addDefaultFilters();
         }
 
         return $this->_defaultFilter;
@@ -678,7 +673,7 @@ abstract class Zend_Markup_Renderer_RendererAbstract
      *
      * @return void
      */
-    public function addGroup($name, array $allowedInside = array(), array $allowsInside = array())
+    public function addGroup($name, array $allowedInside = [], array $allowsInside = [])
     {
         $this->_groups[$name] = $allowsInside;
 

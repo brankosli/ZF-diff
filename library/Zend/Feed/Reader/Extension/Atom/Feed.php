@@ -14,9 +14,9 @@
  *
  * @category   Zend
  * @package    Zend_Feed_Reader
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Feed.php 20096 2010-01-06 02:05:09Z bkarwin $
+ * @version    $Id$
  */
 
 /**
@@ -42,7 +42,7 @@ require_once 'Zend/Feed/Reader/Collection/Author.php';
 /**
  * @category   Zend
  * @package    Zend_Feed_Reader
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Feed_Reader_Extension_Atom_Feed
@@ -78,7 +78,7 @@ class Zend_Feed_Reader_Extension_Atom_Feed
 
         $list = $this->_xpath->query('//atom:author');
 
-        $authors = array();
+        $authors = [];
 
         if ($list->length) {
             foreach ($list as $author) {
@@ -89,7 +89,7 @@ class Zend_Feed_Reader_Extension_Atom_Feed
             }
         }
 
-        if (count($authors) == 0) {
+        if (count($authors) === 0) {
             $authors = null;
         } else {
             $authors = new Zend_Feed_Reader_Collection_Author(
@@ -231,8 +231,6 @@ class Zend_Feed_Reader_Extension_Atom_Feed
 
         if (!$generator) {
             $generator = null;
-        } else {
-            $generator = html_entity_decode($generator, ENT_QUOTES, $this->getEncoding());
         }
 
         $this->_data['generator'] = $generator;
@@ -292,6 +290,54 @@ class Zend_Feed_Reader_Extension_Atom_Feed
         $this->_data['language'] = $language;
 
         return $this->_data['language'];
+    }
+
+    /**
+     * Get the feed image
+     *
+     * @return array|null
+     */
+    public function getImage()
+    {
+        if (array_key_exists('image', $this->_data)) {
+            return $this->_data['image'];
+        }
+
+        $imageUrl = $this->_xpath->evaluate('string(' . $this->getXpathPrefix() . '/atom:logo)');
+
+        if (!$imageUrl) {
+            $image = null;
+        } else {
+            $image = ['uri'=>$imageUrl];
+        }
+
+        $this->_data['image'] = $image;
+
+        return $this->_data['image'];
+    }
+
+    /**
+     * Get the feed image
+     *
+     * @return array|null
+     */
+    public function getIcon()
+    {
+        if (array_key_exists('icon', $this->_data)) {
+            return $this->_data['icon'];
+        }
+
+        $imageUrl = $this->_xpath->evaluate('string(' . $this->getXpathPrefix() . '/atom:icon)');
+
+        if (!$imageUrl) {
+            $image = null;
+        } else {
+            $image = ['uri'=>$imageUrl];
+        }
+
+        $this->_data['icon'] = $image;
+
+        return $this->_data['icon'];
     }
 
     /**
@@ -373,8 +419,8 @@ class Zend_Feed_Reader_Extension_Atom_Feed
         if (array_key_exists('hubs', $this->_data)) {
             return $this->_data['hubs'];
         }
-        $hubs = array();
-        
+        $hubs = [];
+
         $list = $this->_xpath->query($this->getXpathPrefix()
             . '//atom:link[@rel="hub"]/@href');
 
@@ -412,7 +458,7 @@ class Zend_Feed_Reader_Extension_Atom_Feed
 
         return $this->_data['title'];
     }
-    
+
     /**
      * Get all categories
      *
@@ -439,11 +485,11 @@ class Zend_Feed_Reader_Extension_Atom_Feed
         if ($list->length) {
             $categoryCollection = new Zend_Feed_Reader_Collection_Category;
             foreach ($list as $category) {
-                $categoryCollection[] = array(
+                $categoryCollection[] = [
                     'term' => $category->getAttribute('term'),
                     'scheme' => $category->getAttribute('scheme'),
-                    'label' => html_entity_decode($category->getAttribute('label'))
-                );
+                    'label' => $category->getAttribute('label')
+                ];
             }
         } else {
             return new Zend_Feed_Reader_Collection_Category;
@@ -462,12 +508,12 @@ class Zend_Feed_Reader_Extension_Atom_Feed
      */
     protected function _getAuthor(DOMElement $element)
     {
-        $author = array();
+        $author = [];
 
         $emailNode = $element->getElementsByTagName('email');
         $nameNode  = $element->getElementsByTagName('name');
         $uriNode   = $element->getElementsByTagName('uri');
-        
+
         if ($emailNode->length && strlen($emailNode->item(0)->nodeValue) > 0) {
             $author['email'] = $emailNode->item(0)->nodeValue;
         }
@@ -493,7 +539,7 @@ class Zend_Feed_Reader_Extension_Atom_Feed
     protected function _absolutiseUri($link)
     {
         if (!Zend_Uri::check($link)) {
-            if (!is_null($this->getBaseUrl())) {
+            if ($this->getBaseUrl() !== null) {
                 $link = $this->getBaseUrl() . $link;
                 if (!Zend_Uri::check($link)) {
                     $link = null;

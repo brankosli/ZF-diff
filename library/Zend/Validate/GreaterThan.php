@@ -14,9 +14,9 @@
  *
  * @category   Zend
  * @package    Zend_Validate
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: GreaterThan.php 20358 2010-01-17 19:03:49Z thomas $
+ * @version    $Id$
  */
 
 /**
@@ -27,7 +27,7 @@ require_once 'Zend/Validate/Abstract.php';
 /**
  * @category   Zend
  * @package    Zend_Validate
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Validate_GreaterThan extends Zend_Validate_Abstract
@@ -38,16 +38,16 @@ class Zend_Validate_GreaterThan extends Zend_Validate_Abstract
     /**
      * @var array
      */
-    protected $_messageTemplates = array(
+    protected $_messageTemplates = [
         self::NOT_GREATER => "'%value%' is not greater than '%min%'",
-    );
+    ];
 
     /**
      * @var array
      */
-    protected $_messageVariables = array(
+    protected $_messageVariables = [
         'min' => '_min'
-    );
+    ];
 
     /**
      * Minimum value
@@ -60,7 +60,7 @@ class Zend_Validate_GreaterThan extends Zend_Validate_Abstract
      * Sets validator options
      *
      * @param  mixed|Zend_Config $min
-     * @return void
+     * @throws Zend_Validate_Exception
      */
     public function __construct($min)
     {

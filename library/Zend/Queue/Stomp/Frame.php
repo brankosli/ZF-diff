@@ -15,9 +15,9 @@
  * @category   Zend
  * @package    Zend_Queue
  * @subpackage Stomp
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Frame.php 20096 2010-01-06 02:05:09Z bkarwin $
+ * @version    $Id$
  */
 
 /**
@@ -31,7 +31,7 @@ require_once 'Zend/Queue/Stomp/FrameInterface.php';
  * @category   Zend
  * @package    Zend_Queue
  * @subpackage Stomp
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Queue_Stomp_Frame
@@ -46,7 +46,7 @@ class Zend_Queue_Stomp_Frame
      *
      * @var array
      */
-    protected $_headers = array();
+    protected $_headers = [];
 
     /**
      * The command for the frame
@@ -72,7 +72,7 @@ class Zend_Queue_Stomp_Frame
      */
     public function __construct()
     {
-        $this->setHeaders(array());
+        $this->setHeaders([]);
         $this->setBody(null);
         $this->setCommand(null);
         $this->setAutoContentLength(true);
@@ -195,7 +195,7 @@ class Zend_Queue_Stomp_Frame
      */
     public function getBody()
     {
-        return is_null($this->_body)
+        return $this->_body === null
             ? false
             : $this->_body;
     }
@@ -211,7 +211,7 @@ class Zend_Queue_Stomp_Frame
      */
     public function setBody($body)
     {
-        if (!is_string($body) && !is_null($body)) {
+        if (!is_string($body) && $body !== null) {
             require_once 'Zend/Queue/Exception.php';
             throw new Zend_Queue_Exception('$body is not a string or null');
         }
@@ -229,7 +229,7 @@ class Zend_Queue_Stomp_Frame
      */
     public function getCommand()
     {
-        return is_null($this->_command)
+        return $this->_command === null
             ? false
             : $this->_command;
     }
@@ -243,7 +243,7 @@ class Zend_Queue_Stomp_Frame
      */
     public function setCommand($command)
     {
-        if (!is_string($command) && !is_null($command)) {
+        if (!is_string($command) && $command !== null) {
             require_once 'Zend/Queue/Exception.php';
             throw new Zend_Queue_Exception('$command is not a string or null');
         }
@@ -323,7 +323,7 @@ class Zend_Queue_Stomp_Frame
             throw new Zend_Queue_Exception('$frame is not a string');
         }
 
-        $headers = array();
+        $headers = [];
         $body    = null;
         $command = false;
         $header  = '';

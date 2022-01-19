@@ -14,9 +14,9 @@
  *
  * @category   Zend
  * @package    Zend_Barcode
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Barcode.php 20096 2010-01-06 02:05:09Z bkarwin $
+ * @version    $Id$
  */
 
 /**
@@ -24,7 +24,7 @@
  *
  * @category   Zend
  * @package    Zend_Barcode
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Barcode
@@ -55,10 +55,10 @@ class Zend_Barcode
      * @throws Zend_Barcode_Exception
      */
     public static function factory(
-        $barcode, 
-        $renderer = 'image', 
-        $barcodeConfig = array(), 
-        $rendererConfig = array(), 
+        $barcode,
+        $renderer = 'image',
+        $barcodeConfig = [],
+        $rendererConfig = [],
         $automaticRenderError = true
     ) {
         /*
@@ -88,10 +88,10 @@ class Zend_Barcode
         } catch (Zend_Exception $e) {
             $renderable = ($e instanceof Zend_Barcode_Exception) ? $e->isRenderable() : false;
             if ($automaticRenderError && $renderable) {
-                $barcode = self::makeBarcode('error', array(
+                $barcode = self::makeBarcode('error', [
                     'text' => $e->getMessage()
-                ));
-                $renderer = self::makeRenderer($renderer, array());
+                ]);
+                $renderer = self::makeRenderer($renderer, []);
             } else {
                 throw $e;
             }
@@ -108,7 +108,7 @@ class Zend_Barcode
      * @param mixed $barcodeConfig  OPTIONAL; an array or Zend_Config object with barcode parameters.
      * @return Zend_Barcode_Object
      */
-    public static function makeBarcode($barcode, $barcodeConfig = array())
+    public static function makeBarcode($barcode, $barcodeConfig = [])
     {
         if ($barcode instanceof Zend_Barcode_Object_ObjectAbstract) {
             return $barcode;
@@ -207,7 +207,7 @@ class Zend_Barcode
      * @param mixed $rendererConfig     OPTIONAL; an array or Zend_Config object with renderer parameters.
      * @return Zend_Barcode_Renderer
      */
-    public static function makeRenderer($renderer = 'image', $rendererConfig = array())
+    public static function makeRenderer($renderer = 'image', $rendererConfig = [])
     {
         if ($renderer instanceof Zend_Barcode_Renderer_RendererAbstract) {
             return $renderer;
@@ -313,10 +313,10 @@ class Zend_Barcode
      * @param array | Zend_Config $rendererConfig
      */
     public static function render(
-        $barcode, 
-        $renderer, 
-        $barcodeConfig = array(), 
-        $rendererConfig = array()
+        $barcode,
+        $renderer,
+        $barcodeConfig = [],
+        $rendererConfig = []
     ) {
         self::factory($barcode, $renderer, $barcodeConfig, $rendererConfig)->render();
     }
@@ -331,10 +331,10 @@ class Zend_Barcode
      * @return mixed
      */
     public static function draw(
-        $barcode, 
-        $renderer, 
-        $barcodeConfig = array(), 
-        $rendererConfig = array()
+        $barcode,
+        $renderer,
+        $barcodeConfig = [],
+        $rendererConfig = []
     ) {
         return self::factory($barcode, $renderer, $barcodeConfig, $rendererConfig)->draw();
     }

@@ -15,9 +15,9 @@
  * @category   Zend
  * @package    Zend_Form
  * @subpackage Element
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Captcha.php 20096 2010-01-06 02:05:09Z bkarwin $
+ * @version    $Id$
  */
 
 /** @see Zend_Form_Element_Xhtml */
@@ -38,7 +38,7 @@ require_once 'Zend/Captcha/Adapter.php';
  * @category   Zend
  * @package    Zend_Form
  * @subpackage Element
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Form_Element_Captcha extends Zend_Form_Element_Xhtml
@@ -71,7 +71,7 @@ class Zend_Form_Element_Captcha extends Zend_Form_Element_Xhtml
      * @param string|array|Zend_Captcha_Adapter $captcha
      * @param array $options
      */
-    public function setCaptcha($captcha, $options = array())
+    public function setCaptcha($captcha, $options = [])
     {
         if ($captcha instanceof Zend_Captcha_Adapter) {
             $instance = $captcha;
@@ -94,7 +94,7 @@ class Zend_Form_Element_Captcha extends Zend_Form_Element_Xhtml
             } else {
                 $r = new ReflectionClass($name);
                 if ($r->hasMethod('__construct')) {
-                    $instance = $r->newInstanceArgs(array($options));
+                    $instance = $r->newInstanceArgs([$options]);
                 } else {
                     $instance = $r->newInstance();
                 }
@@ -127,24 +127,6 @@ class Zend_Form_Element_Captcha extends Zend_Form_Element_Xhtml
     }
 
     /**
-     * Return all attributes
-     *
-     * @return array
-     */
-    public function getAttribs()
-    {
-        $attribs = get_object_vars($this);
-        unset($attribs['helper']);
-        foreach ($attribs as $key => $value) {
-            if ('_' == substr($key, 0, 1)) {
-                unset($attribs[$key]);
-            }
-        }
-
-        return $attribs;
-    }
-
-    /**
      * Set options
      *
      * Overrides to allow passing captcha options
@@ -154,15 +136,21 @@ class Zend_Form_Element_Captcha extends Zend_Form_Element_Xhtml
      */
     public function setOptions(array $options)
     {
-        parent::setOptions($options);
+        $captcha        = null;
+        $captchaOptions = [];
+
         if (array_key_exists('captcha', $options)) {
+            $captcha = $options['captcha'];
             if (array_key_exists('captchaOptions', $options)) {
-                $this->setCaptcha($options['captcha'], $options['captchaOptions']);
+                $captchaOptions = $options['captchaOptions'];
                 unset($options['captchaOptions']);
-            } else {
-                $this->setCaptcha($options['captcha']);
             }
             unset($options['captcha']);
+        }
+        parent::setOptions($options);
+
+        if(null !== $captcha) {
+            $this->setCaptcha($captcha, $captchaOptions);
         }
         return $this;
     }
@@ -178,17 +166,24 @@ class Zend_Form_Element_Captcha extends Zend_Form_Element_Xhtml
         $captcha    = $this->getCaptcha();
         $captcha->setName($this->getFullyQualifiedName());
 
-        $decorators = $this->getDecorators();
+        if (!$this->loadDefaultDecoratorsIsDisabled()) {
+            $decorators = $this->getDecorators();
+            $decorator  = $captcha->getDecorator();
+            $key        = get_class($this->_getDecorator($decorator, null));
 
-        $decorator  = $captcha->getDecorator();
-        if (!empty($decorator)) {
-            array_unshift($decorators, $decorator);
+            if (!empty($decorator) && !array_key_exists($key, $decorators)) {
+                array_unshift($decorators, $decorator);
+            }
+
+            $decorator = ['Captcha', ['captcha' => $captcha]];
+            $key       = get_class($this->_getDecorator($decorator[0], $decorator[1]));
+
+            if ($captcha instanceof Zend_Captcha_Word && !array_key_exists($key, $decorators)) {
+                array_unshift($decorators, $decorator);
+            }
+
+            $this->setDecorators($decorators);
         }
-
-        $decorator = array('Captcha', array('captcha' => $captcha));
-        array_unshift($decorators, $decorator);
-
-        $this->setDecorators($decorators);
 
         $this->setValue($this->getCaptcha()->generate());
 
@@ -211,7 +206,7 @@ class Zend_Form_Element_Captcha extends Zend_Form_Element_Xhtml
             if (!isset($this->_loaders[$type])) {
                 require_once 'Zend/Loader/PluginLoader.php';
                 $this->_loaders[$type] = new Zend_Loader_PluginLoader(
-                    array('Zend_Captcha' => 'Zend/Captcha/')
+                    ['Zend_Captcha' => 'Zend/Captcha/']
                 );
             }
             return $this->_loaders[$type];
@@ -237,7 +232,8 @@ class Zend_Form_Element_Captcha extends Zend_Form_Element_Xhtml
         switch ($type) {
             case null:
                 $loader = $this->getPluginLoader(self::CAPTCHA);
-                $cPrefix = rtrim($prefix, '_') . '_Captcha';
+                $nsSeparator = (false !== strpos($prefix, '\\'))?'\\':'_';
+                $cPrefix = rtrim($prefix, $nsSeparator) . $nsSeparator . 'Captcha';
                 $cPath   = rtrim($path, '/\\') . '/Captcha';
                 $loader->addPrefixPath($cPrefix, $cPath);
                 return parent::addPrefixPath($prefix, $path);
@@ -253,21 +249,22 @@ class Zend_Form_Element_Captcha extends Zend_Form_Element_Xhtml
     /**
      * Load default decorators
      *
-     * @return void
+     * @return Zend_Form_Element_Captcha
      */
     public function loadDefaultDecorators()
     {
         if ($this->loadDefaultDecoratorsIsDisabled()) {
-            return;
+            return $this;
         }
 
         $decorators = $this->getDecorators();
         if (empty($decorators)) {
             $this->addDecorator('Errors')
-                 ->addDecorator('Description', array('tag' => 'p', 'class' => 'description'))
-                 ->addDecorator('HtmlTag', array('tag' => 'dd'))
-                 ->addDecorator('Label', array('tag' => 'dt'));
+                 ->addDecorator('Description', ['tag' => 'p', 'class' => 'description'])
+                 ->addDecorator('HtmlTag', ['tag' => 'dd', 'id' => $this->getName() . '-element'])
+                 ->addDecorator('Label', ['tag' => 'dt']);
         }
+        return $this;
     }
 
     /**

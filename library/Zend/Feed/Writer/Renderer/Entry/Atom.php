@@ -14,9 +14,9 @@
  *
  * @category   Zend
  * @package    Zend_Feed_Writer
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Atom.php 20507 2010-01-21 22:21:07Z padraic $
+ * @version    $Id$
  */
 
 /**
@@ -26,10 +26,13 @@ require_once 'Zend/Feed/Writer/Renderer/RendererAbstract.php';
 
 require_once 'Zend/Feed/Writer/Renderer/Feed/Atom/Source.php';
 
+/** @see Zend_Xml_Security */
+require_once 'Zend/Xml/Security.php';
+
 /**
  * @category   Zend
  * @package    Zend_Feed_Writer
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Feed_Writer_Renderer_Entry_Atom
@@ -38,8 +41,8 @@ class Zend_Feed_Writer_Renderer_Entry_Atom
 {
     /**
      * Constructor
-     * 
-     * @param  Zend_Feed_Writer_Entry $container 
+     *
+     * @param  Zend_Feed_Writer_Entry $container
      * @return void
      */
     public function __construct (Zend_Feed_Writer_Entry $container)
@@ -49,7 +52,7 @@ class Zend_Feed_Writer_Renderer_Entry_Atom
 
     /**
      * Render atom entry
-     * 
+     *
      * @return Zend_Feed_Writer_Renderer_Entry_Atom
      */
     public function render()
@@ -58,7 +61,7 @@ class Zend_Feed_Writer_Renderer_Entry_Atom
         $this->_dom->formatOutput = true;
         $entry = $this->_dom->createElementNS(Zend_Feed_Writer::NAMESPACE_ATOM_10, 'entry');
         $this->_dom->appendChild($entry);
-        
+
         $this->_setSource($this->_dom, $entry);
         $this->_setTitle($this->_dom, $entry);
         $this->_setDescription($this->_dom, $entry);
@@ -77,16 +80,17 @@ class Zend_Feed_Writer_Renderer_Entry_Atom
             $ext->setDomDocument($this->getDomDocument(), $entry);
             $ext->render();
         }
-        
+
         return $this;
     }
-    
+
     /**
      * Set entry title
-     * 
-     * @param  DOMDocument $dom 
-     * @param  DOMElement $root 
+     *
+     * @param DOMDocument $dom
+     * @param DOMElement $root
      * @return void
+     * @throws Zend_Feed_Exception
      */
     protected function _setTitle(DOMDocument $dom, DOMElement $root)
     {
@@ -97,10 +101,10 @@ class Zend_Feed_Writer_Renderer_Entry_Atom
             $exception = new Zend_Feed_Exception($message);
             if (!$this->_ignoreExceptions) {
                 throw $exception;
-            } else {
-                $this->_exceptions[] = $exception;
-                return;
             }
+
+            $this->_exceptions[] = $exception;
+            return;
         }
         $title = $dom->createElement('title');
         $root->appendChild($title);
@@ -108,12 +112,12 @@ class Zend_Feed_Writer_Renderer_Entry_Atom
         $cdata = $dom->createCDATASection($this->getDataContainer()->getTitle());
         $title->appendChild($cdata);
     }
-    
+
     /**
      * Set entry description
-     * 
-     * @param  DOMDocument $dom 
-     * @param  DOMElement $root 
+     *
+     * @param  DOMDocument $dom
+     * @param  DOMElement $root
      * @return void
      */
     protected function _setDescription(DOMDocument $dom, DOMElement $root)
@@ -129,13 +133,14 @@ class Zend_Feed_Writer_Renderer_Entry_Atom
         );
         $subtitle->appendChild($cdata);
     }
-    
+
     /**
      * Set date entry was modified
-     * 
-     * @param  DOMDocument $dom 
-     * @param  DOMElement $root 
+     *
+     * @param DOMDocument $dom
+     * @param DOMElement $root
      * @return void
+     * @throws Zend_Feed_Exception
      */
     protected function _setDateModified(DOMDocument $dom, DOMElement $root)
     {
@@ -146,10 +151,10 @@ class Zend_Feed_Writer_Renderer_Entry_Atom
             $exception = new Zend_Feed_Exception($message);
             if (!$this->_ignoreExceptions) {
                 throw $exception;
-            } else {
-                $this->_exceptions[] = $exception;
-                return;
             }
+
+            $this->_exceptions[] = $exception;
+            return;
         }
 
         $updated = $dom->createElement('updated');
@@ -159,12 +164,12 @@ class Zend_Feed_Writer_Renderer_Entry_Atom
         );
         $updated->appendChild($text);
     }
-    
+
     /**
      * Set date entry was created
-     * 
-     * @param  DOMDocument $dom 
-     * @param  DOMElement $root 
+     *
+     * @param  DOMDocument $dom
+     * @param  DOMElement $root
      * @return void
      */
     protected function _setDateCreated(DOMDocument $dom, DOMElement $root)
@@ -179,12 +184,12 @@ class Zend_Feed_Writer_Renderer_Entry_Atom
         );
         $el->appendChild($text);
     }
-    
+
     /**
-     * Set entry authors 
-     * 
-     * @param  DOMDocument $dom 
-     * @param  DOMElement $root 
+     * Set entry authors
+     *
+     * @param  DOMDocument $dom
+     * @param  DOMElement $root
      * @return void
      */
     protected function _setAuthors(DOMDocument $dom, DOMElement $root)
@@ -218,12 +223,12 @@ class Zend_Feed_Writer_Renderer_Entry_Atom
             }
         }
     }
-    
+
     /**
      * Set entry enclosure
-     * 
-     * @param  DOMDocument $dom 
-     * @param  DOMElement $root 
+     *
+     * @param  DOMDocument $dom
+     * @param  DOMElement $root
      * @return void
      */
     protected function _setEnclosure(DOMDocument $dom, DOMElement $root)
@@ -234,12 +239,16 @@ class Zend_Feed_Writer_Renderer_Entry_Atom
         }
         $enclosure = $this->_dom->createElement('link');
         $enclosure->setAttribute('rel', 'enclosure');
-        $enclosure->setAttribute('type', $data['type']);
-        $enclosure->setAttribute('length', $data['length']);
+        if (isset($data['type'])) {
+            $enclosure->setAttribute('type', $data['type']);
+        }
+        if (isset($data['length'])) {
+            $enclosure->setAttribute('length', $data['length']);
+        }
         $enclosure->setAttribute('href', $data['uri']);
         $root->appendChild($enclosure);
     }
-    
+
     protected function _setLink(DOMDocument $dom, DOMElement $root)
     {
         if(!$this->getDataContainer()->getLink()) {
@@ -251,13 +260,14 @@ class Zend_Feed_Writer_Renderer_Entry_Atom
         $link->setAttribute('type', 'text/html');
         $link->setAttribute('href', $this->getDataContainer()->getLink());
     }
-    
+
     /**
-     * Set entry identifier 
-     * 
-     * @param  DOMDocument $dom 
-     * @param  DOMElement $root 
+     * Set entry identifier
+     *
+     * @param DOMDocument $dom
+     * @param DOMElement $root
      * @return void
+     * @throws Zend_Feed_Exception
      */
     protected function _setId(DOMDocument $dom, DOMElement $root)
     {
@@ -271,10 +281,10 @@ class Zend_Feed_Writer_Renderer_Entry_Atom
             $exception = new Zend_Feed_Exception($message);
             if (!$this->_ignoreExceptions) {
                 throw $exception;
-            } else {
-                $this->_exceptions[] = $exception;
-                return;
             }
+
+            $this->_exceptions[] = $exception;
+            return;
         }
 
         if (!$this->getDataContainer()->getId()) {
@@ -282,7 +292,9 @@ class Zend_Feed_Writer_Renderer_Entry_Atom
                 $this->getDataContainer()->getLink());
         }
         if (!Zend_Uri::check($this->getDataContainer()->getId()) &&
-        !preg_match("#^urn:[a-zA-Z0-9][a-zA-Z0-9\-]{1,31}:([a-zA-Z0-9\(\)\+\,\.\:\=\@\;\$\_\!\*\-]|%[0-9a-fA-F]{2})*#", $this->getDataContainer()->getId())) {
+        !preg_match("#^urn:[a-zA-Z0-9][a-zA-Z0-9\-]{1,31}:([a-zA-Z0-9\(\)\+\,\.\:\=\@\;\$\_\!\*\-]|%[0-9a-fA-F]{2})*#",
+            $this->getDataContainer()->getId()
+        ) && !$this->_validateTagUri($this->getDataContainer()->getId())) {
             require_once 'Zend/Feed/Exception.php';
             throw new Zend_Feed_Exception('Atom 1.0 IDs must be a valid URI/IRI');
         }
@@ -291,13 +303,51 @@ class Zend_Feed_Writer_Renderer_Entry_Atom
         $text = $dom->createTextNode($this->getDataContainer()->getId());
         $id->appendChild($text);
     }
-    
+
     /**
-     * Set entry content 
-     * 
-     * @param  DOMDocument $dom 
-     * @param  DOMElement $root 
+     * Validate a URI using the tag scheme (RFC 4151)
+     *
+     * @param string $id
+     * @return bool
+     */
+    protected function _validateTagUri($id)
+    {
+        if (preg_match('/^tag:(?<name>.*),(?<date>\d{4}-?\d{0,2}-?\d{0,2}):(?<specific>.*)(.*:)*$/', $id, $matches)) {
+            $dvalid = false;
+            $nvalid = false;
+            $date = $matches['date'];
+            $d6 = strtotime($date);
+            $lenDate = strlen($date);
+
+            if (($lenDate === 4) && $date <= date('Y')) {
+                $dvalid = true;
+            } elseif (($lenDate === 7) && ($d6 < time())) {
+                $dvalid = true;
+            } elseif (($lenDate === 10) && ($d6 < time())) {
+                $dvalid = true;
+            }
+
+            $validator = new Zend_Validate_EmailAddress;
+
+            if ($validator->isValid($matches['name'])) {
+                $nvalid = true;
+            } else {
+                $nvalid = $validator->isValid('info@' . $matches['name']);
+            }
+
+            return $dvalid && $nvalid;
+        }
+
+        return false;
+    }
+
+    /**
+     * Set entry content
+     *
+     * @param DOMDocument $dom
+     * @param DOMElement $root
      * @return void
+     * @throws Zend_Feed_Exception
      */
     protected function _setContent(DOMDocument $dom, DOMElement $root)
     {
@@ -311,10 +361,10 @@ class Zend_Feed_Writer_Renderer_Entry_Atom
             $exception = new Zend_Feed_Exception($message);
             if (!$this->_ignoreExceptions) {
                 throw $exception;
-            } else {
-                $this->_exceptions[] = $exception;
-                return;
             }
+
+            $this->_exceptions[] = $exception;
+            return;
         }
         if (!$content) {
             return;
@@ -326,7 +376,7 @@ class Zend_Feed_Writer_Renderer_Entry_Atom
         $element->appendChild($xhtml);
         $root->appendChild($element);
     }
-    
+
     /**
      * Load a HTML string and attempt to normalise to XML
      */
@@ -335,10 +385,11 @@ class Zend_Feed_Writer_Renderer_Entry_Atom
         $xhtml = '';
         if (class_exists('tidy', false)) {
             $tidy = new tidy;
-            $config = array(
+            $config = [
                 'output-xhtml' => true,
-                'show-body-only' => true
-            );
+                'show-body-only' => true,
+                'quote-nbsp' => false
+            ];
             $encoding = str_replace('-', '', $this->getEncoding());
             $tidy->parseString($content, $config, $encoding);
             $tidy->cleanRepair();
@@ -346,20 +397,21 @@ class Zend_Feed_Writer_Renderer_Entry_Atom
         } else {
             $xhtml = $content;
         }
-        $xhtml = preg_replace(array(
-            "/(<[\/]?)([a-zA-Z]+)/"   
-        ), '$1xhtml:$2', $xhtml);
+        $xhtml = preg_replace([
+            "/(<[\/]?)([a-zA-Z]+)/"
+        ], '$1xhtml:$2', $xhtml);
         $dom = new DOMDocument('1.0', $this->getEncoding());
-        $dom->loadXML('<xhtml:div xmlns:xhtml="http://www.w3.org/1999/xhtml">'
-            . $xhtml . '</xhtml:div>');
+
+        $dom = Zend_Xml_Security::scan('<xhtml:div xmlns:xhtml="http://www.w3.org/1999/xhtml">'
+            . $xhtml . '</xhtml:div>', $dom);
         return $dom->documentElement;
     }
-    
+
     /**
-     * Set entry cateories 
-     * 
-     * @param  DOMDocument $dom 
-     * @param  DOMElement $root 
+     * Set entry cateories
+     *
+     * @param  DOMDocument $dom
+     * @param  DOMElement $root
      * @return void
      */
     protected function _setCategories(DOMDocument $dom, DOMElement $root)
@@ -382,12 +434,12 @@ class Zend_Feed_Writer_Renderer_Entry_Atom
             $root->appendChild($category);
         }
     }
-    
+
     /**
      * Append Source element (Atom 1.0 Feed Metadata)
      *
-     * @param  DOMDocument $dom 
-     * @param  DOMElement $root 
+     * @param  DOMDocument $dom
+     * @param  DOMElement $root
      * @return void
      */
     protected function _setSource(DOMDocument $dom, DOMElement $root)
@@ -400,6 +452,6 @@ class Zend_Feed_Writer_Renderer_Entry_Atom
         $renderer->setType($this->getType());
         $element = $renderer->render()->getElement();
         $imported = $dom->importNode($element, true);
-        $root->appendChild($imported); 
+        $root->appendChild($imported);
     }
 }

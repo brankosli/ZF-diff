@@ -15,9 +15,9 @@
  *
  * @category   Zend
  * @package    Zend_Feed
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Atom.php 20096 2010-01-06 02:05:09Z bkarwin $
+ * @version    $Id$
  */
 
 
@@ -44,7 +44,7 @@ require_once 'Zend/Feed/Entry/Atom.php';
  *
  * @category   Zend
  * @package    Zend_Feed
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Feed_Atom extends Zend_Feed_Abstract
@@ -137,7 +137,7 @@ class Zend_Feed_Atom extends Zend_Feed_Abstract
         $links = parent::__get('link');
         if (!is_array($links)) {
             if ($links instanceof Zend_Feed_Element) {
-                $links = array($links);
+                $links = [$links];
             } else {
                 return $links;
             }
@@ -385,6 +385,6 @@ class Zend_Feed_Atom extends Zend_Feed_Abstract
 
         header('Content-Type: application/atom+xml; charset=' . $this->_element->ownerDocument->actualEncoding);
 
-        echo $this->saveXML();
+        echo $this->saveXml();
     }
 }

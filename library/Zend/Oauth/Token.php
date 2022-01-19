@@ -14,9 +14,9 @@
  *
  * @category   Zend
  * @package    Zend_Oauth
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Token.php 20232 2010-01-12 17:56:33Z matthew $
+ * @version    $Id$
  */
 
 /** Zend_Oauth_Http_Utility */
@@ -25,7 +25,7 @@ require_once 'Zend/Oauth/Http/Utility.php';
 /**
  * @category   Zend
  * @package    Zend_Oauth
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 abstract class Zend_Oauth_Token
@@ -40,14 +40,14 @@ abstract class Zend_Oauth_Token
 
     /**
      * Token parameters
-     * 
+     *
      * @var array
      */
-    protected $_params = array();
+    protected $_params = [];
 
     /**
      * OAuth response object
-     * 
+     *
      * @var Zend_Http_Response
      */
     protected $_response = null;
@@ -68,14 +68,14 @@ abstract class Zend_Oauth_Token
         Zend_Http_Response $response = null,
         Zend_Oauth_Http_Utility $utility = null
     ) {
-        if (!is_null($response)) {
+        if ($response !== null) {
             $this->_response = $response;
             $params = $this->_parseParameters($response);
             if (count($params) > 0) {
                 $this->setParams($params);
             }
         }
-        if (!is_null($utility)) {
+        if ($utility !== null) {
             $this->_httpUtility = $utility;
         } else {
             $this->_httpUtility = new Zend_Oauth_Http_Utility;
@@ -250,7 +250,7 @@ abstract class Zend_Oauth_Token
      */
     protected function _parseParameters(Zend_Http_Response $response)
     {
-        $params = array();
+        $params = [];
         $body   = $response->getBody();
         if (empty($body)) {
             return;
@@ -264,21 +264,21 @@ abstract class Zend_Oauth_Token
         }
         return $params;
     }
-    
+
     /**
      * Limit serialisation stored data to the parameters
      */
-    public function __sleep() 
+    public function __sleep()
     {
-        return array('_params');
+        return ['_params'];
     }
 
     /**
      * After serialisation, re-instantiate a HTTP utility class for use
      */
-    public function __wakeup() 
+    public function __wakeup()
     {
-        if (is_null($this->_httpUtility)) {
+        if ($this->_httpUtility === null) {
             $this->_httpUtility = new Zend_Oauth_Http_Utility;
         }
     }

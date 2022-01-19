@@ -14,9 +14,9 @@
  *
  * @category   Zend
  * @package    Zend_Memory
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Memory.php 20805 2010-02-01 15:52:15Z alexander $
+ * @version    $Id$
  */
 
 /** Zend_Memory_Exception */
@@ -34,7 +34,7 @@ require_once 'Zend/Cache.php';
 /**
  * @category   Zend
  * @package    Zend_Memory
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Memory
@@ -47,17 +47,17 @@ class Zend_Memory
      * @return Zend_Memory_Manager
      * @throws Zend_Memory_Exception
      */
-    public static function factory($backend, $backendOptions = array())
+    public static function factory($backend, $backendOptions = [])
     {
-        if (strcasecmp($backend, 'none') == 0) {
+        if (strcasecmp($backend, 'none') === 0) {
             return new Zend_Memory_Manager();
         }
 
         // Look through available backendsand
         // (that allows to specify it in any case)
         $backendIsFound = false;
-        foreach (Zend_Cache::$availableBackends as $zendCacheBackend) {
-            if (strcasecmp($backend, $zendCacheBackend) == 0) {
+        foreach (Zend_Cache::$standardBackends as $zendCacheBackend) {
+            if (strcasecmp($backend, $zendCacheBackend) === 0) {
                 $backend = $zendCacheBackend;
                 $backendIsFound = true;
                 break;

@@ -15,9 +15,9 @@
  * @category   Zend
  * @package    Zend_Service
  * @subpackage StrikeIron
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: SalesUseTaxBasic.php 20096 2010-01-06 02:05:09Z bkarwin $
+ * @version    $Id$
  */
 
 /** Zend_Service_StrikeIron_Base */
@@ -27,7 +27,7 @@ require_once 'Zend/Service/StrikeIron/Base.php';
  * @category   Zend
  * @package    Zend_Service
  * @subpackage StrikeIron
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Service_StrikeIron_SalesUseTaxBasic extends Zend_Service_StrikeIron_Base
@@ -36,10 +36,10 @@ class Zend_Service_StrikeIron_SalesUseTaxBasic extends Zend_Service_StrikeIron_B
      * Configuration options
      * @param array
      */
-    protected $_options = array('username' => null,
+    protected $_options = ['username' => null,
                                 'password' => null,
                                 'client'   => null,
                                 'options'  => null,
                                 'headers'  => null,
-                                'wsdl'     => 'http://ws.strikeiron.com/zf1.StrikeIron/taxdatabasic4?WSDL');
+                                'wsdl'     => 'http://ws.strikeiron.com/zf1.StrikeIron/taxdatabasic4?WSDL'];
 }

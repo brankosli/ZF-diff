@@ -16,9 +16,9 @@
  * @category   Zend
  * @package    Zend_Gdata
  * @subpackage App
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: FeedEntryParent.php 20096 2010-01-06 02:05:09Z bkarwin $
+ * @version    $Id$
  */
 
 /**
@@ -77,7 +77,7 @@ require_once 'Zend/Version.php';
  * @category   Zend
  * @package    Zend_Gdata
  * @subpackage App
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 abstract class Zend_Gdata_App_FeedEntryParent extends Zend_Gdata_App_Base
@@ -97,11 +97,11 @@ abstract class Zend_Gdata_App_FeedEntryParent extends Zend_Gdata_App_Base
      */
     protected $_etag = NULL;
 
-    protected $_author = array();
-    protected $_category = array();
-    protected $_contributor = array();
+    protected $_author = [];
+    protected $_category = [];
+    protected $_contributor = [];
     protected $_id = null;
-    protected $_link = array();
+    protected $_link = [];
     protected $_rights = null;
     protected $_title = null;
     protected $_updated = null;
@@ -172,8 +172,8 @@ abstract class Zend_Gdata_App_FeedEntryParent extends Zend_Gdata_App_Base
         if (!$this->_service) {
             $this->_service = new Zend_Gdata_App();
         }
-        $client = $this->_service->getHttpClient();
-        return $client;
+
+        return $this->_service->getHttpClient();
     }
 
     /**

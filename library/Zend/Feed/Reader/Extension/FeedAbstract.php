@@ -14,9 +14,9 @@
  *
  * @category   Zend
  * @package    Zend_Feed_Reader
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: FeedAbstract.php 20096 2010-01-06 02:05:09Z bkarwin $
+ * @version    $Id$
  */
 
 /**
@@ -38,7 +38,7 @@ require_once 'Zend/Feed/Reader/Entry/Rss.php';
 /**
  * @category   Zend
  * @package    Zend_Feed_Reader
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 abstract class Zend_Feed_Reader_Extension_FeedAbstract
@@ -48,7 +48,7 @@ abstract class Zend_Feed_Reader_Extension_FeedAbstract
      *
      * @var array
      */
-    protected $_data = array();
+    protected $_data = [];
 
     /**
      * Parsed feed data in the shape of a DOMDocument
@@ -78,7 +78,7 @@ abstract class Zend_Feed_Reader_Extension_FeedAbstract
      * @param  string $type Feed type
      * @return void
      */
-    public function __construct(DomDocument $dom, $type = null, DOMXPath $xpath = null)
+    public function __construct(DOMDocument $dom, $type = null, DOMXPath $xpath = null)
     {
         $this->_domDocument = $dom;
 
@@ -114,8 +114,7 @@ abstract class Zend_Feed_Reader_Extension_FeedAbstract
      */
     public function getEncoding()
     {
-        $assumed = $this->getDomDocument()->encoding;
-        return $assumed;
+        return $this->getDomDocument()->encoding;
     }
 
     /**

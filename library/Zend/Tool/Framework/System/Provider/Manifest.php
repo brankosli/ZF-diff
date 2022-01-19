@@ -15,9 +15,9 @@
  * @category   Zend
  * @package    Zend_Tool
  * @subpackage Framework
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Manifest.php 20096 2010-01-06 02:05:09Z bkarwin $
+ * @version    $Id$
  */
 
 /**
@@ -33,7 +33,7 @@ require_once 'Zend/Tool/Framework/Provider/Interface.php';
 /**
  * @category   Zend
  * @package    Zend_Tool
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Tool_Framework_System_Provider_Manifest
@@ -56,7 +56,7 @@ class Zend_Tool_Framework_System_Provider_Manifest
         $manifestRepository = $this->_registry->getManifestRepository();
         $response           = $this->_registry->getResponse();
 
-        $metadataTree = array();
+        $metadataTree = [];
 
         $longestAttrNameLen = 50;
 
@@ -73,15 +73,15 @@ class Zend_Tool_Framework_System_Provider_Manifest
             }
 
             if (!array_key_exists($metadataType, $metadataTree)) {
-                $metadataTree[$metadataType] = array();
+                $metadataTree[$metadataType] = [];
             }
 
             if (!array_key_exists($metadataName, $metadataTree[$metadataType])) {
-                $metadataTree[$metadataType][$metadataName] = array();
+                $metadataTree[$metadataType][$metadataName] = [];
             }
 
             if (!array_key_exists($metadataAttrs, $metadataTree[$metadataType][$metadataName])) {
-                $metadataTree[$metadataType][$metadataName][$metadataAttrs] = array();
+                $metadataTree[$metadataType][$metadataName][$metadataAttrs] = [];
             }
 
             $longestAttrNameLen = (strlen($metadataAttrs) > $longestAttrNameLen) ? strlen($metadataAttrs) : $longestAttrNameLen;

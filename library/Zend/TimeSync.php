@@ -15,8 +15,8 @@
  *
  * @category   Zend
  * @package    Zend_TimeSync
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
- * @version    $Id: TimeSync.php 20096 2010-01-06 02:05:09Z bkarwin $
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
+ * @version    $Id$
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
@@ -28,7 +28,7 @@ require_once 'Zend/Date.php';
 /**
  * @category   Zend
  * @package    Zend_TimeSync
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_TimeSync implements IteratorAggregate
@@ -44,7 +44,7 @@ class Zend_TimeSync implements IteratorAggregate
      *
      * @var array
      */
-    protected $_timeservers = array();
+    protected $_timeservers = [];
 
     /**
      * Holds a reference to the timeserver that is currently being used
@@ -58,10 +58,10 @@ class Zend_TimeSync implements IteratorAggregate
      *
      * @var array
      */
-    protected $_allowedSchemes = array(
+    protected $_allowedSchemes = [
         'Ntp',
         'Sntp'
-    );
+    ];
 
     /**
      * Configuration array, set using the constructor or using
@@ -69,9 +69,9 @@ class Zend_TimeSync implements IteratorAggregate
      *
      * @var array
      */
-    public static $options = array(
+    public static $options = [
         'timeout' => 1
-    );
+    ];
 
     /**
      * Zend_TimeSync constructor
@@ -233,7 +233,7 @@ class Zend_TimeSync implements IteratorAggregate
      * facade and will try to return the date from the first server that
      * returns a valid result.
      *
-     * @param   $locale - OPTIONAL locale
+     * @param   Zend_Locale $locale - OPTIONAL locale
      * @return  object
      * @throws  Zend_TimeSync_Exception
      */
@@ -273,10 +273,10 @@ class Zend_TimeSync implements IteratorAggregate
 
         if ($pos = strrpos($adress, ':')) {
             $posbr = strpos($adress, ']');
-            if ($posbr and ($pos > $posbr)) {
+            if ($posbr && ($pos > $posbr)) {
                 $port = substr($adress, $pos + 1);
                 $adress = substr($adress, 0, $pos);
-            } else if (!$posbr and $pos) {
+            } else if (!$posbr && $pos) {
                 $port = substr($adress, $pos + 1);
                 $adress = substr($adress, 0, $pos);
             } else {

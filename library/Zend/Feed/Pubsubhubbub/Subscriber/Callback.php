@@ -14,8 +14,9 @@
  *
  * @category   Zend
  * @package    Zend_Feed_Pubsubhubbub
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ * @version    $Id$
  */
 
 /**
@@ -36,7 +37,7 @@ require_once 'Zend/Feed/Reader.php';
 /**
  * @category   Zend
  * @package    Zend_Feed_Pubsubhubbub
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Feed_Pubsubhubbub_Subscriber_Callback
@@ -48,7 +49,7 @@ class Zend_Feed_Pubsubhubbub_Subscriber_Callback
      * @var string
      */
     protected $_feedUpdate = null;
-    
+
     /**
      * Holds a manually set subscription key (i.e. identifies a unique
      * subscription) which is typical when it is not passed in the query string
@@ -58,14 +59,14 @@ class Zend_Feed_Pubsubhubbub_Subscriber_Callback
      * @var string
      */
     protected $_subscriptionKey = null;
-    
+
     /**
      * After verification, this is set to the verified subscription's data.
      *
      * @var array
      */
     protected $_currentSubscriptionData = null;
-    
+
     /**
      * Set a subscription key to use for the current callback request manually.
      * Required if usePathParameter is enabled for the Subscriber.
@@ -101,13 +102,14 @@ class Zend_Feed_Pubsubhubbub_Subscriber_Callback
          * SHOULD be validated/processed by an asynchronous process so as
          * to avoid holding up responses to the Hub.
          */
+        $contentType = $this->_getHeader('Content-Type');
         if (strtolower($_SERVER['REQUEST_METHOD']) == 'post'
             && $this->_hasValidVerifyToken(null, false)
-            && ($this->_getHeader('Content-Type') == 'application/atom+xml'
-                || $this->_getHeader('Content-Type') == 'application/rss+xml'
-                || $this->_getHeader('Content-Type') == 'application/xml'
-                || $this->_getHeader('Content-Type') == 'text/xml'
-                || $this->_getHeader('Content-Type') == 'application/rdf+xml')
+            && (stripos($contentType, 'application/atom+xml') === 0
+                || stripos($contentType, 'application/rss+xml') === 0
+                || stripos($contentType, 'application/xml') === 0
+                || stripos($contentType, 'text/xml') === 0
+                || stripos($contentType, 'application/rdf+xml') === 0)
         ) {
             $this->setFeedUpdate($this->_getRawBody());
             $this->getHttpResponse()
@@ -152,12 +154,12 @@ class Zend_Feed_Pubsubhubbub_Subscriber_Callback
         if (strtolower($_SERVER['REQUEST_METHOD']) !== 'get') {
             return false;
         }
-        $required = array(
-            'hub_mode', 
+        $required = [
+            'hub_mode',
             'hub_topic',
-            'hub_challenge', 
+            'hub_challenge',
             'hub_verify_token',
-        );
+        ];
         foreach ($required as $key) {
             if (!array_key_exists($key, $httpGetData)) {
                 return false;
@@ -207,7 +209,7 @@ class Zend_Feed_Pubsubhubbub_Subscriber_Callback
      */
     public function hasFeedUpdate()
     {
-        if (is_null($this->_feedUpdate)) {
+        if ($this->_feedUpdate === null) {
             return false;
         }
         return true;
@@ -300,13 +302,13 @@ class Zend_Feed_Pubsubhubbub_Subscriber_Callback
      */
     protected function _parseQueryString()
     {
-        $params      = array();
+        $params      = [];
         $queryString = '';
         if (isset($_SERVER['QUERY_STRING'])) {
             $queryString = $_SERVER['QUERY_STRING'];
         }
         if (empty($queryString)) {
-            return array();
+            return [];
         }
         $parts = explode('&', $queryString);
         foreach ($parts as $kvpair) {
@@ -317,7 +319,7 @@ class Zend_Feed_Pubsubhubbub_Subscriber_Callback
                 if (is_array($params[$key])) {
                     $params[$key][] = $value;
                 } else {
-                    $params[$key] = array($params[$key], $value);
+                    $params[$key] = [$params[$key], $value];
                 }
             } else {
                 $params[$key] = $value;

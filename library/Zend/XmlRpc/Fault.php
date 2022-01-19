@@ -14,9 +14,9 @@
  *
  * @package    Zend_XmlRpc
  * @subpackage Server
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Fault.php 20208 2010-01-11 22:37:37Z lars $
+ * @version    $Id$
  */
 
 /**
@@ -36,7 +36,7 @@ require_once 'Zend/XmlRpc/Value.php';
  *
  * @category   Zend
  * @package    Zend_XmlRpc
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_XmlRpc_Fault
@@ -63,7 +63,7 @@ class Zend_XmlRpc_Fault
      * Internal fault codes => messages
      * @var array
      */
-    protected $_internal = array(
+    protected $_internal = [
         404 => 'Unknown Error',
 
         // 610 - 619 reflection errors
@@ -95,7 +95,7 @@ class Zend_XmlRpc_Fault
         651 => 'Failed to parse response',
         652 => 'Invalid response',
         653 => 'Invalid XMLRPC value in response',
-    );
+    ];
 
     /**
      * Constructor
@@ -140,7 +140,7 @@ class Zend_XmlRpc_Fault
     /**
      * Retrieve fault message
      *
-     * @param string
+     * @param string $message
      * @return Zend_XmlRpc_Fault
      */
     public function setMessage($message)
@@ -279,10 +279,10 @@ class Zend_XmlRpc_Fault
     public function saveXml()
     {
         // Create fault value
-        $faultStruct = array(
+        $faultStruct = [
             'faultCode'   => $this->getCode(),
             'faultString' => $this->getMessage()
-        );
+        ];
         $value = Zend_XmlRpc_Value::getXmlRpcValue($faultStruct);
 
         $generator = Zend_XmlRpc_Value::getGenerator();
@@ -302,6 +302,6 @@ class Zend_XmlRpc_Fault
      */
     public function __toString()
     {
-        return $this->saveXML();
+        return $this->saveXml();
     }
 }

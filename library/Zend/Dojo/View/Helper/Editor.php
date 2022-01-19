@@ -15,9 +15,9 @@
  * @category   Zend
  * @package    Zend_Dojo
  * @subpackage View
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Editor.php 20116 2010-01-07 14:18:34Z matthew $
+ * @version    $Id$
  */
 
 /** Zend_Dojo_View_Helper_Dijit */
@@ -32,7 +32,7 @@ require_once 'Zend/Json.php';
  * @uses       Zend_Dojo_View_Helper_Textarea
  * @package    Zend_Dojo
  * @subpackage View
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Dojo_View_Helper_Editor extends Zend_Dojo_View_Helper_Dijit
@@ -50,21 +50,28 @@ class Zend_Dojo_View_Helper_Editor extends Zend_Dojo_View_Helper_Dijit
     /**
      * @var array Maps non-core plugin to module basename
      */
-    protected $_pluginsModules = array(
+    protected $_pluginsModules = [
         'createLink' => 'LinkDialog',
         'insertImage' => 'LinkDialog',
         'fontName' => 'FontChoice',
         'fontSize' => 'FontChoice',
         'formatBlock' => 'FontChoice',
         'foreColor' => 'TextColor',
-        'hiliteColor' => 'TextColor'
-    );
+        'hiliteColor' => 'TextColor',
+        'enterKeyHandling' => 'EnterKeyHandling',
+        'fullScreen' => 'FullScreen',
+        'newPage' => 'NewPage',
+        'print' => 'Print',
+        'tabIndent' => 'TabIndent',
+        'toggleDir' => 'ToggleDir',
+        'viewSource' => 'ViewSource'
+    ];
 
     /**
      * JSON-encoded parameters
      * @var array
      */
-    protected $_jsonParams = array('captureEvents', 'events', 'plugins');
+    protected $_jsonParams = ['captureEvents', 'events', 'plugins', 'extraPlugins'];
 
     /**
      * dijit.Editor
@@ -75,7 +82,7 @@ class Zend_Dojo_View_Helper_Editor extends Zend_Dojo_View_Helper_Dijit
      * @param  array $attribs
      * @return string
      */
-    public function editor($id, $value = null, $params = array(), $attribs = array())
+    public function editor($id, $value = null, $params = [], $attribs = [])
     {
         if (isset($params['plugins'])) {
             foreach ($this->_getRequiredModules($params['plugins']) as $module) {
@@ -83,8 +90,8 @@ class Zend_Dojo_View_Helper_Editor extends Zend_Dojo_View_Helper_Dijit
             }
         }
 
-        // Previous versions allowed specifying "degrade" to allow using a 
-        // textarea instead of a div -- but this is insecure. Removing the 
+        // Previous versions allowed specifying "degrade" to allow using a
+        // textarea instead of a div -- but this is insecure. Removing the
         // parameter if set to prevent its injection in the dijit.
         if (isset($params['degrade'])) {
             unset($params['degrade']);
@@ -101,12 +108,12 @@ class Zend_Dojo_View_Helper_Editor extends Zend_Dojo_View_Helper_Dijit
         $textareaName = $this->_normalizeEditorName($hiddenName);
         $textareaId   = $hiddenId . '-Editor';
 
-        $hiddenAttribs = array(
+        $hiddenAttribs = [
             'id'    => $hiddenId,
             'name'  => $hiddenName,
             'value' => $value,
             'type'  => 'hidden',
-        );
+        ];
         $attribs['id'] = $textareaId;
 
         $this->_createGetParentFormFunction();
@@ -114,16 +121,17 @@ class Zend_Dojo_View_Helper_Editor extends Zend_Dojo_View_Helper_Dijit
 
         $attribs = $this->_prepareDijit($attribs, $params, 'textarea');
 
-        $html  = '<input' . $this->_htmlAttribs($hiddenAttribs) . $this->getClosingBracket();
-        $html .= '<div' . $this->_htmlAttribs($attribs) . '>'
+        $html  = '<div' . $this->_htmlAttribs($attribs) . '>'
                . $value
                . "</div>\n";
 
-        // Embed a textarea in a <noscript> tag to allow for graceful 
+        // Embed a textarea in a <noscript> tag to allow for graceful
         // degradation
         $html .= '<noscript>'
                . $this->view->formTextarea($hiddenId, $value, $attribs)
                . '</noscript>';
+
+        $html  .= '<input' . $this->_htmlAttribs($hiddenAttribs) . $this->getClosingBracket();
 
         return $html;
     }
@@ -136,7 +144,7 @@ class Zend_Dojo_View_Helper_Editor extends Zend_Dojo_View_Helper_Dijit
      */
     protected function _getRequiredModules(array $plugins)
     {
-        $modules = array();
+        $modules = [];
         foreach ($plugins as $commandName) {
             if (isset($this->_pluginsModules[$commandName])) {
                 $pluginName = $this->_pluginsModules[$commandName];
@@ -178,7 +186,11 @@ class Zend_Dojo_View_Helper_Editor extends Zend_Dojo_View_Helper_Dijit
 function() {
     var form = zend.findParentForm(dojo.byId('$hiddenId'));
     dojo.connect(form, 'submit', function(e) {
-        dojo.byId('$hiddenId').value = dijit.byId('$editorId').getValue(false);
+        var value = dijit.byId('$editorId').getValue(false);
+        if(dojo.isFF) {
+            value = value.replace(/<br _moz_editor_bogus_node="TRUE" \/>/, '');
+        }
+        dojo.byId('$hiddenId').value = value;
     });
 }
 EOJ;

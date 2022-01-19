@@ -15,9 +15,9 @@
  * @category   Zend
  * @package    Zend_Test
  * @subpackage PHPUnit
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: DbAdapter.php 20096 2010-01-06 02:05:09Z bkarwin $
+ * @version    $Id$
  */
 
 /**
@@ -41,7 +41,7 @@ require_once 'Zend/Db/Profiler.php';
  * @category   Zend
  * @package    Zend_Test
  * @subpackage PHPUnit
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Test_DbAdapter extends Zend_Db_Adapter_Abstract
@@ -49,7 +49,7 @@ class Zend_Test_DbAdapter extends Zend_Db_Adapter_Abstract
     /**
      * @var array
      */
-    protected $_statementStack = array();
+    protected $_statementStack = [];
 
     /**
      * @var boolean
@@ -59,21 +59,21 @@ class Zend_Test_DbAdapter extends Zend_Db_Adapter_Abstract
     /**
      * @var array
      */
-    protected $_listTables = array();
+    protected $_listTables = [];
 
     /**
      * @var array
      */
-    protected $_lastInsertIdStack = array();
+    protected $_lastInsertIdStack = [];
 
     /**
      * @var array
      */
-    protected $_describeTables = array();
+    protected $_describeTables = [];
 
     /**
      * @var string
-     */ 
+     */
     protected $_quoteIdentifierSymbol = '';
 
     /**
@@ -112,7 +112,7 @@ class Zend_Test_DbAdapter extends Zend_Db_Adapter_Abstract
 
     /**
      * @var string
-     */ 
+     */
     public function setQuoteIdentifierSymbol($symbol)
     {
         $this->_quoteIdentifierSymbol = $symbol;
@@ -192,7 +192,7 @@ class Zend_Test_DbAdapter extends Zend_Db_Adapter_Abstract
         if(isset($this->_describeTables[$tableName])) {
             return $this->_describeTables[$tableName];
         } else {
-            return array();
+            return [];
         }
     }
 

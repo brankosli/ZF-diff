@@ -15,9 +15,9 @@
  * @category   Zend
  * @package    Zend_Tool
  * @subpackage Framework
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Xml.php 20967 2010-02-07 18:17:49Z ralph $
+ * @version    $Id$
  */
 
 require_once 'Zend/Tool/Project/Profile/FileParser/Interface.php';
@@ -28,7 +28,7 @@ require_once 'Zend/Tool/Project/Profile/Resource.php';
 /**
  * @category   Zend
  * @package    Zend_Tool
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Tool_Project_Profile_FileParser_Xml implements Zend_Tool_Project_Profile_FileParser_Interface
@@ -72,11 +72,11 @@ class Zend_Tool_Project_Profile_FileParser_Xml implements Zend_Tool_Project_Prof
         if ($profile->hasAttribute('type')) {
             $xmlElement->addAttribute('type', $profile->getAttribute('type'));
         }
-        
+
         if ($profile->hasAttribute('version')) {
             $xmlElement->addAttribute('version', $profile->getAttribute('version'));
         }
-        
+
         self::_serializeRecurser($profile, $xmlElement);
 
         $doc = new DOMDocument('1.0');
@@ -111,15 +111,15 @@ class Zend_Tool_Project_Profile_FileParser_Xml implements Zend_Tool_Project_Prof
         if ($xmlDataIterator->getName() != 'projectProfile') {
             throw new Exception('Profiles must start with a projectProfile node');
         }
-        
+
         if (isset($xmlDataIterator['type'])) {
             $this->_profile->setAttribute('type', (string) $xmlDataIterator['type']);
         }
-        
+
         if (isset($xmlDataIterator['version'])) {
             $this->_profile->setAttribute('version', (string) $xmlDataIterator['version']);
         }
-        
+
         // start un-serialization of the xml doc
         $this->_unserializeRecurser($xmlDataIterator);
 
@@ -139,7 +139,7 @@ class Zend_Tool_Project_Profile_FileParser_Xml implements Zend_Tool_Project_Prof
      * @param array $resources
      * @param SimpleXmlElement $xmlNode
      */
-    protected function _serializeRecurser($resources, SimpleXmlElement $xmlNode)
+    protected function _serializeRecurser($resources, SimpleXMLElement $xmlNode)
     {
         // @todo find a better way to handle concurrency.. if no clone, _position in node gets messed up
         //if ($resources instanceof Zend_Tool_Project_Profile_Resource) {
@@ -195,7 +195,7 @@ class Zend_Tool_Project_Profile_FileParser_Xml implements Zend_Tool_Project_Prof
             $subResource->setProfile($this->_profile);
 
             if ($resourceAttributes = $resourceData->attributes()) {
-                $attributes = array();
+                $attributes = [];
                 foreach ($resourceAttributes as $attrName => $attrValue) {
                     $attributes[$attrName] = (string) $attrValue;
                 }

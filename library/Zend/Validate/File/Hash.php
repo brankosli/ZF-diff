@@ -14,9 +14,9 @@
  *
  * @category  Zend
  * @package   Zend_Validate
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license   http://framework.zend.com/license/new-bsd     New BSD License
- * @version   $Id: Hash.php 20358 2010-01-17 19:03:49Z thomas $
+ * @version   $Id$
  */
 
 /**
@@ -29,7 +29,7 @@ require_once 'Zend/Validate/Abstract.php';
  *
  * @category  Zend
  * @package   Zend_Validate
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license   http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Validate_File_Hash extends Zend_Validate_Abstract
@@ -44,11 +44,11 @@ class Zend_Validate_File_Hash extends Zend_Validate_Abstract
     /**
      * @var array Error message templates
      */
-    protected $_messageTemplates = array(
+    protected $_messageTemplates = [
         self::DOES_NOT_MATCH => "File '%value%' does not match the given hashes",
         self::NOT_DETECTED   => "A hash could not be evaluated for the given file",
-        self::NOT_FOUND      => "File '%value%' could not be found"
-    );
+        self::NOT_FOUND      => "File '%value%' is not readable or does not exist"
+    ];
 
     /**
      * Hash of the file
@@ -61,14 +61,14 @@ class Zend_Validate_File_Hash extends Zend_Validate_Abstract
      * Sets validator options
      *
      * @param  string|array $options
-     * @return void
+     * @throws Zend_Validate_Exception
      */
     public function __construct($options)
     {
         if ($options instanceof Zend_Config) {
             $options = $options->toArray();
         } elseif (is_scalar($options)) {
-            $options = array('hash1' => $options);
+            $options = ['hash1' => $options];
         } elseif (!is_array($options)) {
             require_once 'Zend/Validate/Exception.php';
             throw new Zend_Validate_Exception('Invalid options to validator provided');
@@ -109,12 +109,13 @@ class Zend_Validate_File_Hash extends Zend_Validate_Abstract
      * Adds the hash for one or multiple files
      *
      * @param  string|array $options
+     * @throws Zend_Validate_Exception
      * @return Zend_Validate_File_Hash Provides a fluent interface
      */
     public function addHash($options)
     {
         if (is_string($options)) {
-            $options = array($options);
+            $options = [$options];
         } else if (!is_array($options)) {
             require_once 'Zend/Validate/Exception.php';
             throw new Zend_Validate_Exception("False parameter given");

@@ -15,9 +15,9 @@
  * @category   Zend
  * @package    Zend_Mail
  * @subpackage Storage
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Pop3.php 20096 2010-01-06 02:05:09Z bkarwin $
+ * @version    $Id$
  */
 
 
@@ -41,7 +41,7 @@ require_once 'Zend/Mail/Message.php';
  * @category   Zend
  * @package    Zend_Mail
  * @subpackage Storage
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Mail_Storage_Pop3 extends Zend_Mail_Storage_Abstract
@@ -91,8 +91,8 @@ class Zend_Mail_Storage_Pop3 extends Zend_Mail_Storage_Abstract
         $bodyLines = 0;
         $message = $this->_protocol->top($id, $bodyLines, true);
 
-        return new $this->_messageClass(array('handler' => $this, 'id' => $id, 'headers' => $message,
-                                              'noToplines' => $bodyLines < 1));
+        return new $this->_messageClass(['handler' => $this, 'id' => $id, 'headers' => $message,
+                                              'noToplines' => $bodyLines < 1]);
     }
 
     /*
@@ -154,7 +154,7 @@ class Zend_Mail_Storage_Pop3 extends Zend_Mail_Storage_Abstract
      *   - port port for POP3 server [optional, default = 110]
      *   - ssl 'SSL' or 'TLS' for secure sockets
      *
-     * @param  $params array  mail reader specific parameters
+     * @param array $params mail reader specific parameters
      * @throws Zend_Mail_Storage_Exception
      * @throws Zend_Mail_Protocol_Exception
      */
@@ -244,7 +244,7 @@ class Zend_Mail_Storage_Pop3 extends Zend_Mail_Storage_Abstract
             }
             $count = $this->countMessages();
             if ($count < 1) {
-                return array();
+                return [];
             }
             $range = range(1, $count);
             return array_combine($range, $range);

@@ -15,9 +15,9 @@
  * @category   Zend
  * @package    Zend_XmlRpc
  * @subpackage Generator
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Client.php 17752 2009-08-22 15:49:54Z lars $
+ * @version    $Id$
  */
 
 /**
@@ -85,7 +85,7 @@ class Zend_XmlRpc_Generator_DomDocument extends Zend_XmlRpc_Generator_GeneratorA
      */
     public function saveXml()
     {
-        return $this->_dom->saveXml();
+        return $this->_dom->saveXML();
     }
 
     /**

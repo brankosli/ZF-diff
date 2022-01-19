@@ -16,9 +16,9 @@
  * @category     Zend
  * @package      Zend_Gdata
  * @subpackage   Spreadsheets
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Spreadsheets.php 20096 2010-01-06 02:05:09Z bkarwin $
+ * @version    $Id$
  */
 
 /**
@@ -89,13 +89,13 @@ require_once('Zend/Gdata/Spreadsheets/CellQuery.php');
  * @category     Zend
  * @package      Zend_Gdata
  * @subpackage   Spreadsheets
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Gdata_Spreadsheets extends Zend_Gdata
 {
-    const SPREADSHEETS_FEED_URI = 'http://spreadsheets.google.com/feeds/spreadsheets';
-    const SPREADSHEETS_POST_URI = 'http://spreadsheets.google.com/feeds/spreadsheets/private/full';
+    const SPREADSHEETS_FEED_URI = 'https://spreadsheets.google.com/feeds/spreadsheets';
+    const SPREADSHEETS_POST_URI = 'https://spreadsheets.google.com/feeds/spreadsheets/private/full';
     const WORKSHEETS_FEED_LINK_URI = 'http://schemas.google.com/spreadsheets/2006#worksheetsfeed';
     const LIST_FEED_LINK_URI = 'http://schemas.google.com/spreadsheets/2006#listfeed';
     const CELL_FEED_LINK_URI = 'http://schemas.google.com/spreadsheets/2006#cellsfeed';
@@ -106,11 +106,11 @@ class Zend_Gdata_Spreadsheets extends Zend_Gdata
      *
      * @var array
      */
-    public static $namespaces = array(
-        array('gs', 'http://schemas.google.com/spreadsheets/2006', 1, 0),
-        array(
-            'gsx', 'http://schemas.google.com/spreadsheets/2006/extended', 1, 0)
-    );
+    public static $namespaces = [
+        ['gs', 'http://schemas.google.com/spreadsheets/2006', 1, 0],
+        [
+            'gsx', 'http://schemas.google.com/spreadsheets/2006/extended', 1, 0]
+    ];
 
     /**
      * Create Gdata_Spreadsheets object
@@ -291,7 +291,7 @@ class Zend_Gdata_Spreadsheets extends Zend_Gdata
      * @param int $inputValue The new value for the cell
      * @param string $key The key for the spreadsheet to be updated
      * @param string $wkshtId (optional) The worksheet to be updated
-     * @return CellEntry The updated cell entry.
+     * @return CellEntry Response: The updated cell entry.
      */
     public function updateCell($row, $col, $inputValue, $key, $wkshtId = 'default')
     {
@@ -304,8 +304,8 @@ class Zend_Gdata_Spreadsheets extends Zend_Gdata
 
         $entry = $this->getCellEntry($query);
         $entry->setCell(new Zend_Gdata_Spreadsheets_Extension_Cell(null, $row, $col, $inputValue));
-        $response = $entry->save();
-        return $response;
+
+        return $entry->save();
     }
 
     /**
@@ -319,7 +319,7 @@ class Zend_Gdata_Spreadsheets extends Zend_Gdata
     public function insertRow($rowData, $key, $wkshtId = 'default')
     {
         $newEntry = new Zend_Gdata_Spreadsheets_ListEntry();
-        $newCustomArr = array();
+        $newCustomArr = [];
         foreach ($rowData as $k => $v) {
             $newCustom = new Zend_Gdata_Spreadsheets_Extension_Custom();
             $newCustom->setText($v)->setColumnName($k);
@@ -344,7 +344,7 @@ class Zend_Gdata_Spreadsheets extends Zend_Gdata
      */
     public function updateRow($entry, $newRowData)
     {
-        $newCustomArr = array();
+        $newCustomArr = [];
         foreach ($newRowData as $k => $v) {
             $newCustom = new Zend_Gdata_Spreadsheets_Extension_Custom();
             $newCustom->setText($v)->setColumnName($k);
@@ -375,9 +375,9 @@ class Zend_Gdata_Spreadsheets extends Zend_Gdata
     {
         $listFeed = $this->getListFeed($location);
         $listFeed = $this->retrieveAllEntriesForFeed($listFeed);
-        $spreadsheetContents = array();
+        $spreadsheetContents = [];
         foreach ($listFeed as $listEntry) {
-            $rowContents = array();
+            $rowContents = [];
             $customArray = $listEntry->getCustom();
             foreach ($customArray as $custom) {
                 $rowContents[$custom->getColumnName()] = $custom->getText();
@@ -420,9 +420,9 @@ class Zend_Gdata_Spreadsheets extends Zend_Gdata
 
         $cellFeed = $this->getCellFeed($cellQuery);
         $cellFeed = $this->retrieveAllEntriesForFeed($cellFeed);
-        $spreadsheetContents = array();
+        $spreadsheetContents = [];
         foreach ($cellFeed as $cellEntry) {
-            $cellContents = array();
+            $cellContents = [];
             $cell = $cellEntry->getCell();
             $cellContents['formula'] = $cell->getInputValue();
             $cellContents['value'] = $cell->getText();

@@ -14,33 +14,33 @@
  *
  * @category   Zend
  * @package    Zend_Feed_Writer
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Writer.php 20096 2010-01-06 02:05:09Z bkarwin $
+ * @version    $Id$
  */
 
 /**
  * @category   Zend
  * @package    Zend_Feed_Writer
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Feed_Writer
 {
-	/**
-	 * Namespace constants
-	 */
-	const NAMESPACE_ATOM_03  = 'http://purl.org/atom/ns#';
+    /**
+     * Namespace constants
+     */
+    const NAMESPACE_ATOM_03  = 'http://purl.org/atom/ns#';
     const NAMESPACE_ATOM_10  = 'http://www.w3.org/2005/Atom';
     const NAMESPACE_RDF      = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#';
     const NAMESPACE_RSS_090  = 'http://my.netscape.com/rdf/simple/0.9/';
     const NAMESPACE_RSS_10   = 'http://purl.org/rss/1.0/';
 
     /**
-	 * Feed type constants
-	 */
-	const TYPE_ANY              = 'any';
-	const TYPE_ATOM_03          = 'atom-03';
+     * Feed type constants
+     */
+    const TYPE_ANY              = 'any';
+    const TYPE_ATOM_03          = 'atom-03';
     const TYPE_ATOM_10          = 'atom-10';
     const TYPE_ATOM_ANY         = 'atom';
     const TYPE_RSS_090          = 'rss-090';
@@ -53,7 +53,7 @@ class Zend_Feed_Writer
     const TYPE_RSS_10           = 'rss-10';
     const TYPE_RSS_20           = 'rss-20';
     const TYPE_RSS_ANY          = 'rss';
-    
+
     /**
      * PluginLoader instance used by component
      *
@@ -66,7 +66,7 @@ class Zend_Feed_Writer
      *
      * @var array
      */
-    protected static $_prefixPaths = array();
+    protected static $_prefixPaths = [];
 
     /**
      * Array of registered extensions by class postfix (after the base class
@@ -75,13 +75,13 @@ class Zend_Feed_Writer
      *
      * @var array
      */
-    protected static $_extensions = array(
-        'entry'         => array(),
-        'feed'          => array(),
-        'entryRenderer' => array(),
-        'feedRenderer'  => array(),
-    );
-    
+    protected static $_extensions = [
+        'entry'         => [],
+        'feed'          => [],
+        'entryRenderer' => [],
+        'feedRenderer'  => [],
+    ];
+
     /**
      * Set plugin loader for use with Extensions
      *
@@ -101,9 +101,9 @@ class Zend_Feed_Writer
     {
         if (!isset(self::$_pluginLoader)) {
             require_once 'Zend/Loader/PluginLoader.php';
-            self::$_pluginLoader = new Zend_Loader_PluginLoader(array(
+            self::$_pluginLoader = new Zend_Loader_PluginLoader([
                 'Zend_Feed_Writer_Extension_' => 'Zend/Feed/Writer/Extension/',
-            ));
+            ]);
         }
         return self::$_pluginLoader;
     }
@@ -233,13 +233,13 @@ class Zend_Feed_Writer
     public static function reset()
     {
         self::$_pluginLoader = null;
-        self::$_prefixPaths  = array();
-        self::$_extensions   = array(
-            'entry'         => array(),
-            'feed'          => array(),
-            'entryRenderer' => array(),
-            'feedRenderer'  => array(),
-        );
+        self::$_prefixPaths  = [];
+        self::$_extensions   = [
+            'entry'         => [],
+            'feed'          => [],
+            'entryRenderer' => [],
+            'feedRenderer'  => [],
+        ];
     }
 
     /**
@@ -257,7 +257,7 @@ class Zend_Feed_Writer
         self::registerExtension('Threading');
         self::registerExtension('ITunes');
     }
-    
+
     public static function lcfirst($str)
     {
         $str[0] = strtolower($str[0]);

@@ -14,9 +14,9 @@
  *
  * @category   Zend
  * @package    Zend_Validate
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Callback.php 20096 2010-01-06 02:05:09Z bkarwin $
+ * @version    $Id$
  */
 
 /**
@@ -27,7 +27,7 @@ require_once 'Zend/Validate/Abstract.php';
 /**
  * @category   Zend
  * @package    Zend_Validate
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Validate_Callback extends Zend_Validate_Abstract
@@ -47,10 +47,10 @@ class Zend_Validate_Callback extends Zend_Validate_Abstract
      *
      * @var array
      */
-    protected $_messageTemplates = array(
+    protected $_messageTemplates = [
         self::INVALID_VALUE    => "'%value%' is not valid",
-        self::INVALID_CALLBACK => "Failure within the callback, exception returned",
-    );
+        self::INVALID_CALLBACK => "An exception has been raised within the callback",
+    ];
 
     /**
      * Callback in a call_user_func format
@@ -64,15 +64,13 @@ class Zend_Validate_Callback extends Zend_Validate_Abstract
      *
      * @var mixed
      */
-    protected $_options = array();
+    protected $_options = [];
 
     /**
      * Sets validator options
      *
-     * @param  string|array $callback
-     * @param  mixed   $max
-     * @param  boolean $inclusive
-     * @return void
+     * @param  mixed $callback
+     * @throws Zend_Validate_Exception
      */
     public function __construct($callback = null)
     {
@@ -107,6 +105,7 @@ class Zend_Validate_Callback extends Zend_Validate_Abstract
      * Sets the callback
      *
      * @param  string|array $callback
+     * @throws Zend_Validate_Exception
      * @return Zend_Validate_Callback Provides a fluent interface
      */
     public function setCallback($callback)
@@ -132,7 +131,7 @@ class Zend_Validate_Callback extends Zend_Validate_Abstract
     /**
      * Sets options for the callback
      *
-     * @param  mixed $max
+     * @param  mixed $options
      * @return Zend_Validate_Callback Provides a fluent interface
      */
     public function setOptions($options)

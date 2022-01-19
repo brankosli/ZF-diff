@@ -15,9 +15,9 @@
  * @category   Zend
  * @package    Zend_Search_Lucene
  * @subpackage Index
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: SegmentWriter.php 20096 2010-01-06 02:05:09Z bkarwin $
+ * @version    $Id$
  */
 
 
@@ -34,7 +34,7 @@ require_once 'Zend/Search/Lucene/Index/TermInfo.php';
  * @category   Zend
  * @package    Zend_Search_Lucene
  * @subpackage Index
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 abstract class Zend_Search_Lucene_Index_SegmentWriter
@@ -104,14 +104,14 @@ abstract class Zend_Search_Lucene_Index_SegmentWriter
      *
      * @var unknown_type
      */
-    protected $_files = array();
+    protected $_files = [];
 
     /**
      * Segment fields. Array of Zend_Search_Lucene_Index_FieldInfo objects for this segment
      *
      * @var array
      */
-    protected $_fields = array();
+    protected $_fields = [];
 
     /**
      * Normalization factors.
@@ -123,7 +123,7 @@ abstract class Zend_Search_Lucene_Index_SegmentWriter
      *
      * @var array
      */
-    protected $_norms = array();
+    protected $_norms = [];
 
 
     /**
@@ -484,6 +484,7 @@ abstract class Zend_Search_Lucene_Index_SegmentWriter
             $this->_lastIndexPosition = $indexPosition;
 
         }
+
         $this->_termCount++;
     }
 
@@ -526,8 +527,10 @@ abstract class Zend_Search_Lucene_Index_SegmentWriter
             // Calculate actual matched UTF-8 pattern
             $prefixBytes = 0;
             $prefixChars = 0;
+
             while ($prefixBytes < $matchedBytes) {
                 $charBytes = 1;
+
                 if ((ord($term->text[$prefixBytes]) & 0xC0) == 0xC0) {
                     $charBytes++;
                     if (ord($term->text[$prefixBytes]) & 0x20 ) {
@@ -593,7 +596,7 @@ abstract class Zend_Search_Lucene_Index_SegmentWriter
         $cfsFile = $this->_directory->createFile($this->_name . '.cfs');
         $cfsFile->writeVInt(count($this->_files));
 
-        $dataOffsetPointers = array();
+        $dataOffsetPointers = [];
         foreach ($this->_files as $fileName) {
             $dataOffsetPointers[$fileName] = $cfsFile->tell();
             $cfsFile->writeLong(0); // write dummy data

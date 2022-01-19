@@ -14,9 +14,9 @@
  *
  * @category   Zend
  * @package    Zend_Markup
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: TokenList.php 20277 2010-01-14 14:17:12Z kokx $
+ * @version    $Id$
  */
 
 /**
@@ -27,7 +27,7 @@ require_once 'Zend/Markup/Token.php';
 /**
  * @category   Zend
  * @package    Zend_Markup
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Markup_TokenList implements RecursiveIterator
@@ -38,7 +38,7 @@ class Zend_Markup_TokenList implements RecursiveIterator
      *
      * @var array
      */
-    protected $_tokens = array();
+    protected $_tokens = [];
 
     /**
      * Get the current token

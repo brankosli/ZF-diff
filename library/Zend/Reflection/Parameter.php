@@ -14,15 +14,15 @@
  *
  * @category   Zend
  * @package    Zend_Reflection
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Parameter.php 20096 2010-01-06 02:05:09Z bkarwin $
+ * @version    $Id$
  */
 
 /**
  * @category   Zend
  * @package    Zend_Reflection
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Reflection_Parameter extends ReflectionParameter
@@ -58,12 +58,20 @@ class Zend_Reflection_Parameter extends ReflectionParameter
      */
     public function getClass($reflectionClass = 'Zend_Reflection_Class')
     {
-        $phpReflection  = parent::getClass();
-        if($phpReflection == null) {
-            return null;
+        if (PHP_VERSION_ID < 80000) {
+            $phpReflection  = parent::getClass();
+            if ($phpReflection == null) {
+                return null;
+            }
+            $phpReflectionClassName = $phpReflection->getName();
+        } else {
+            if (!parent::hasType()) {
+                return null;
+            }
+            $phpReflectionClassName = parent::getType();
         }
 
-        $zendReflection = new $reflectionClass($phpReflection->getName());
+        $zendReflection = new $reflectionClass($phpReflectionClassName);
         if (!$zendReflection instanceof Zend_Reflection_Class) {
             require_once 'Zend/Reflection/Exception.php';
             throw new Zend_Reflection_Exception('Invalid reflection class provided; must extend Zend_Reflection_Class');
@@ -109,13 +117,21 @@ class Zend_Reflection_Parameter extends ReflectionParameter
      */
     public function getType()
     {
-        if ($docblock = $this->getDeclaringFunction()->getDocblock()) {
-            $params = $docblock->getTags('param');
+        try {
+            if ($docblock = $this->getDeclaringFunction()->getDocblock()) {
+                $params = $docblock->getTags('param');
 
-            if (isset($params[$this->getPosition()])) {
-                return $params[$this->getPosition()]->getType();
+                if (isset($params[$this->getPosition()])) {
+                    return $params[$this->getPosition()]->getType();
+                }
+
             }
-
+        } catch (Zend_Reflection_Exception $e) {
+            if (PHP_VERSION_ID >= 80000) {
+                return parent::getType();
+            } else {
+                throw $e;
+            }
         }
 
         return null;

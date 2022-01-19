@@ -15,9 +15,9 @@
  * @category   Zend
  * @package    Zend_Auth
  * @subpackage Zend_Auth_Adapter
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: OpenId.php 20096 2010-01-06 02:05:09Z bkarwin $
+ * @version    $Id$
  */
 
 
@@ -40,7 +40,7 @@ require_once 'Zend/OpenId/Consumer.php';
  * @category   Zend
  * @package    Zend_Auth
  * @subpackage Zend_Auth_Adapter
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Auth_Adapter_OpenId implements Zend_Auth_Adapter_Interface
@@ -113,7 +113,6 @@ class Zend_Auth_Adapter_OpenId implements Zend_Auth_Adapter_Interface
      * @param mixed $extensions extension object or array of extensions objects
      * @param Zend_Controller_Response_Abstract $response an optional response
      *        object to perform HTTP or HTML form redirection
-     * @return void
      */
     public function __construct($id = null,
                                 Zend_OpenId_Consumer_Storage $storage = null,
@@ -192,7 +191,7 @@ class Zend_Auth_Adapter_OpenId implements Zend_Auth_Adapter_Interface
     /**
      * Sets an optional response object to perform HTTP or HTML form redirection
      *
-     * @param  string $root
+     * @param  string $response
      * @return Zend_Auth_Adapter_OpenId Provides a fluent interface
      */
     public function setResponse($response)
@@ -245,7 +244,7 @@ class Zend_Auth_Adapter_OpenId implements Zend_Auth_Adapter_Interface
                     return new Zend_Auth_Result(
                         Zend_Auth_Result::FAILURE,
                         $id,
-                        array("Authentication failed", $consumer->getError()));
+                        ["Authentication failed", $consumer->getError()]);
                 }
             } else {
                 if (!$consumer->check($id,
@@ -256,7 +255,7 @@ class Zend_Auth_Adapter_OpenId implements Zend_Auth_Adapter_Interface
                     return new Zend_Auth_Result(
                         Zend_Auth_Result::FAILURE,
                         $id,
-                        array("Authentication failed", $consumer->getError()));
+                        ["Authentication failed", $consumer->getError()]);
                 }
             }
         } else {
@@ -271,12 +270,12 @@ class Zend_Auth_Adapter_OpenId implements Zend_Auth_Adapter_Interface
                 return new Zend_Auth_Result(
                     Zend_Auth_Result::SUCCESS,
                     $id,
-                    array("Authentication successful"));
+                    ["Authentication successful"]);
             } else {
                 return new Zend_Auth_Result(
                     Zend_Auth_Result::FAILURE,
                     $id,
-                    array("Authentication failed", $consumer->getError()));
+                    ["Authentication failed", $consumer->getError()]);
             }
         }
     }
