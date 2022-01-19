@@ -17,54 +17,56 @@
  * @subpackage Resource
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id$
  */
 
 /**
- * @see Zend_Application_Resource_ResourceAbstract
- */
-require_once 'Zend/Application/Resource/ResourceAbstract.php';
-
-
-/**
- * Resource for settings layout options
- *
- * @uses       Zend_Application_Resource_ResourceAbstract
  * @category   Zend
  * @package    Zend_Application
  * @subpackage Resource
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-class Zend_Application_Resource_Layout
-    extends Zend_Application_Resource_ResourceAbstract
+class Zend_Application_Resource_UserAgent extends Zend_Application_Resource_ResourceAbstract
 {
     /**
-     * @var Zend_Layout
+     * @var Zend_Http_UserAgent
      */
-    protected $_layout;
+    protected $_userAgent;
 
     /**
-     * Defined by Zend_Application_Resource_Resource
+     * Intialize resource
      *
-     * @return Zend_Layout
+     * @return Zend_Http_UserAgent
      */
     public function init()
     {
-        $this->getBootstrap()->bootstrap('FrontController');
-        return $this->getLayout();
+        $userAgent = $this->getUserAgent();
+
+        // Optionally seed the UserAgent view helper
+        $bootstrap = $this->getBootstrap();
+        if ($bootstrap->hasResource('view') || $bootstrap->hasPluginResource('view')) {
+            $bootstrap->bootstrap('view');
+            $view = $bootstrap->getResource('view');
+            if (null !== $view) {
+                $view->userAgent($userAgent);
+            }
+        }
+
+        return $userAgent;
     }
 
     /**
-     * Retrieve layout object
+     * Get UserAgent instance
      *
-     * @return Zend_Layout
+     * @return Zend_Http_UserAgent
      */
-    public function getLayout()
+    public function getUserAgent()
     {
-        if (null === $this->_layout) {
-            $this->_layout = Zend_Layout::startMvc($this->getOptions());
+        if (null === $this->_userAgent) {
+            $options = $this->getOptions();
+            $this->_userAgent = new Zend_Http_UserAgent($options);
         }
-        return $this->_layout;
+
+        return $this->_userAgent;
     }
 }
